@@ -91,6 +91,7 @@ const Dashboard = () => {
           getUserDeposits(id);
           getUserDetails(id);
           setFailedLoading(false);
+          toast.success("Deposit Approved");
           setTimeout(() => {
             navigate("/all-deposits");
             setUpdateStatus(!updateStatus);
@@ -117,6 +118,7 @@ const Dashboard = () => {
         if (data.status === 200) {
           setDepositLoading(false);
           getUserDetails(userId);
+          toast.success("Deposit Approved");
           setTimeout(() => {
             navigate("/all-deposits");
             setUpdateStatus(!updateStatus);

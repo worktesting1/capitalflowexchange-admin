@@ -9,7 +9,7 @@ const DashboardHeader = ({ toggleVisibility }) => {
       <img src={LoginImageHero} alt="" className="hero_login_image" />
       <RiMenu3Line onClick={toggleVisibility} />
       <div className="profile">
-        <h3 className="profile_text">CL</h3>
+        <h3 className="profile_text">EC</h3>
       </div>
     </header>
   );

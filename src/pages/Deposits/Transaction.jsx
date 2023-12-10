@@ -8,7 +8,7 @@ import { ColorRing } from "react-loader-spinner";
 const Deposits = () => {
   const { allDeposits, getAllDeposits, dLoading } = useGlobalContext();
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
-  const symbol = "R";
+  const symbol = "$";
 
   useEffect(() => {
     getAllDeposits(adminToken);

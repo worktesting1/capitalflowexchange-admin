@@ -15,7 +15,7 @@ const TableBody = ({
   loading,
 }) => {
   const [status, setStatus] = useState(true);
-  const symbol = "R";
+  const symbol = "$";
   const navigate = useNavigate();
   return (
     <>
