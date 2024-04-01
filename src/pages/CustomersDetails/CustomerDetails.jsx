@@ -6,15 +6,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGlobalContext } from "../../context/context";
 import { ColorRing } from "react-loader-spinner";
 
-const CustomerDetails = ({ toggleDepositStatus }) => {
+const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
   const [details, setDetails] = useState("");
   let userDeposits;
+  let userWithdrawals;
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
 
   const formatter = new Intl.NumberFormat("en-US");
   const navigate = useNavigate();
   const { id } = useParams();
-  const symbol = "$";
+
   const {
     allDeposits,
     getUserDetails,
@@ -22,6 +23,8 @@ const CustomerDetails = ({ toggleDepositStatus }) => {
     userLoading,
     userDLoading,
     getAllDeposits,
+    widthDrawals,
+    getAllWithdrawals,
   } = useGlobalContext();
   const {
     profit,
@@ -39,17 +42,30 @@ const CustomerDetails = ({ toggleDepositStatus }) => {
     status,
   } = userDetails;
 
+  const symbol = country?.symbol;
+
   // Update Deposit to failed status
 
   userDeposits = allDeposits.filter((deposit) => deposit.userId === id);
+  userWithdrawals = widthDrawals.filter((transfer) => transfer.userId === id);
   const getPendingDepositsAmount = () => {
     return userDeposits
       .filter((deposit) => deposit.status === false)
       .reduce((accumulator, { amount }) => accumulator + amount / 1, 0);
   };
+  const getPendingWithdrawals = () => {
+    return widthDrawals
+      .filter((transfer) => transfer.status === false)
+      .reduce((accumulator, { amount }) => accumulator + amount / 1, 0);
+  };
   const getSuccessfulDepositsAmount = () => {
     return userDeposits
       .filter((deposit) => deposit.status === true)
+      .reduce((accumulator, { amount }) => accumulator + amount / 1, 0);
+  };
+  const getSuccessWithdrawals = () => {
+    return userWithdrawals
+      .filter((transfer) => transfer.status === true)
       .reduce((accumulator, { amount }) => accumulator + amount / 1, 0);
   };
 
@@ -65,6 +81,7 @@ const CustomerDetails = ({ toggleDepositStatus }) => {
     setDetails("customers_order_details");
     getUserDetails(id);
     getAllDeposits(adminToken);
+    getAllWithdrawals(adminToken);
   }, []);
 
   return (
@@ -90,10 +107,28 @@ const CustomerDetails = ({ toggleDepositStatus }) => {
                   wrapperClass="blocks-wrapper"
                   colors={["black", "black", "black", "black", "black"]}
                 />
-              ) : status === "true" ? (
-                "Active"
               ) : (
-                "Inactive"
+                `${status === "false" ? "Inactive" : "Active"}`
+              )}
+            </h3>
+          </div>
+        </div>
+        <div>
+          <div>
+            <p className="dashboard_paragraph">Pending Withdrawal</p>
+            <h3 className="dashboard_header_text">
+              {userLoading ? (
+                <ColorRing
+                  visible={true}
+                  height="30"
+                  width="30"
+                  ariaLabel="blocks-loading"
+                  wrapperStyle={{}}
+                  wrapperClass="blocks-wrapper"
+                  colors={["black", "black", "black", "black", "black"]}
+                />
+              ) : (
+                ` ${symbol} ${getPendingWithdrawals()}`
               )}
             </h3>
           </div>
@@ -161,27 +196,7 @@ const CustomerDetails = ({ toggleDepositStatus }) => {
             </h3>
           </div>
         </div>
-        <div>
-          <div>
-            <p className="dashboard_paragraph">Withdrawals</p>
-            <h3 className="dashboard_header_text">
-              {userLoading ? (
-                <ColorRing
-                  visible={true}
-                  height="30"
-                  width="30"
-                  ariaLabel="blocks-loading"
-                  wrapperStyle={{}}
-                  wrapperClass="blocks-wrapper"
-                  colors={["black", "black", "black", "black", "black"]}
-                />
-              ) : (
-                `${symbol}
-              ${formatter.format(0)}`
-              )}
-            </h3>
-          </div>
-        </div>
+
         <div>
           <div>
             <p className="dashboard_paragraph">Completed Deposits</p>
@@ -255,7 +270,7 @@ const CustomerDetails = ({ toggleDepositStatus }) => {
         </div>
         <div className="add_food_item_form_item_eigth">
           <p className="add_food_item_form_labels">Country</p>
-          <input defaultValue={country} className="food_item_inputs" />
+          <input defaultValue={country?.name} className="food_item_inputs" />
         </div>
         <div className="add_food_item_form_item_nine">
           <p className="add_food_item_form_labels">Password</p>
@@ -337,7 +352,9 @@ const CustomerDetails = ({ toggleDepositStatus }) => {
           </div>
         </div>
         <TableBody
+          symbol={symbol}
           toggleDepositStatus={toggleDepositStatus}
+          toggleWithdrawalStatus={toggleWithdrawalStatus}
           order={
             details === "customers_favorite_details"
               ? "customers_favorite_details"
@@ -348,7 +365,9 @@ const CustomerDetails = ({ toggleDepositStatus }) => {
               : ""
           }
           tableData={
-            details === "customers_favorite_details" ? userDeposits : ""
+            details === "customers_favorite_details"
+              ? userDeposits
+              : userWithdrawals
           }
           loading={userDLoading}
         />

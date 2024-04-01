@@ -1,14 +1,37 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./Transaction.css";
 import moment from "moment";
 import { Button } from "../../components";
 import { useGlobalContext } from "../../context/context";
 import { ColorRing } from "react-loader-spinner";
+import Delete from "../../asset/delete.svg";
+import axios from "axios";
 
 const Deposits = () => {
-  const { allDeposits, getAllDeposits, dLoading } = useGlobalContext();
+  const [loading, setLoading] = useState(false);
+  const { allDeposits, getAllDeposits, dLoading, userDetails, baseUrl } =
+    useGlobalContext();
+  const { country } = userDetails;
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
-  const symbol = "$";
+
+  const symbol = country?.symbol;
+
+  const deleteDeposit = (id) => {
+    setLoading(true);
+    axios
+      .post(
+        `${baseUrl}deposit/delete/${id}`,
+        {},
+        { headers: { token: adminToken } }
+      )
+      .then((response) => {
+        setLoading(false);
+        getAllDeposits(adminToken);
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
     getAllDeposits(adminToken);
@@ -34,8 +57,11 @@ const Deposits = () => {
             <div className="reference">
               <h3>Update Date</h3>
             </div>
+            <div className="delete_deposit">
+              <h3>Delete Deposit</h3>
+            </div>
           </div>
-          {dLoading ? (
+          {dLoading || loading ? (
             <div className="list_loader">
               <ColorRing
                 visible={true}
@@ -49,10 +75,16 @@ const Deposits = () => {
             </div>
           ) : (
             allDeposits.map((item, index) => {
-              const { createdAt, transactiontype, status, amount, updatedAt } =
-                item;
+              const {
+                createdAt,
+                transactiontype,
+                status,
+                amount,
+                updatedAt,
+                _id,
+              } = item;
 
-              let date = moment(createdAt).format("MMMM do yyyy, h:mm:ss a");
+              let date = moment(createdAt).format("MMMM Do YYYY, h:mm:ss a");
               return (
                 <div key={index} className="transaction_table_body">
                   <div className="date">
@@ -77,7 +109,14 @@ const Deposits = () => {
                     />
                   </div>
                   <div className="reference">
-                    <p>{moment(updatedAt).format("MMMM do yyyy, h:mm:ss a")}</p>
+                    <p>{moment(updatedAt).format("MMMM Do YYYY, h:mm:ss a")}</p>
+                  </div>
+                  <div className="delete_deposit">
+                    <img
+                      onClick={() => deleteDeposit(_id)}
+                      src={Delete}
+                      alt=""
+                    />
                   </div>
                 </div>
               );

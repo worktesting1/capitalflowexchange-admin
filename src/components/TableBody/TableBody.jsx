@@ -13,9 +13,11 @@ const TableBody = ({
   tableData,
   toggleDepositStatus,
   loading,
+  symbol,
+  toggleWithdrawalStatus,
 }) => {
   const [status, setStatus] = useState(true);
-  const symbol = "$";
+
   const navigate = useNavigate();
   return (
     <>
@@ -248,7 +250,7 @@ const TableBody = ({
                       <p className="food_item_paragraphs">{email}</p>
                     </div>
                     <div className={`table_body_header_item_7`}>
-                      <p className="food_item_paragraphs">{country}</p>
+                      <p className="food_item_paragraphs">{country?.name}</p>
                     </div>
                     <div className={`table_body_header_item_8`}>
                       <Button
@@ -318,6 +320,7 @@ const TableBody = ({
                     status,
                     _id,
                     userId,
+                    referenceNumber,
                   } = item;
                   return (
                     <div key={index} className="table_body_body">
@@ -351,7 +354,9 @@ const TableBody = ({
                         </p>
                       </div>
                       <div className={`table_body_header_item_7`}>
-                        <p className="food_item_paragraphs">{_id}</p>
+                        <p className="food_item_paragraphs">
+                          {referenceNumber}
+                        </p>
                       </div>
                       <div className={`table_body_header_item_8`}>
                         <Button
@@ -379,11 +384,11 @@ const TableBody = ({
               {[
                 "S/n",
                 "id",
-                "Client",
+                "Type",
                 "created on",
-                "Wallet Address",
+                "Account Number",
                 "amount",
-                "Reference",
+                "Account Name",
                 "status",
               ].map((item, index) => (
                 <div
@@ -395,35 +400,40 @@ const TableBody = ({
               ))}
             </div>
             <>
-              {[1, 2].map((_, index) => (
-                <Link
-                  to={`/${path}/${index + 1}`}
-                  key={index}
-                  className="table_body_body"
-                >
+              {tableData.map((transfer, index) => (
+                <div key={index} className="table_body_body">
                   <div className={`table_body_header_item_1`}>
-                    <p className="food_item_paragraphs">1</p>
+                    <p className="food_item_paragraphs">{index + 1}</p>
                   </div>
                   <div className={`table_body_header_item_2`}>
-                    <p className="paginators_numbers">345</p>
+                    <p className="paginators_numbers">
+                      {transfer?._id.slice(0, 9)}
+                    </p>
                   </div>
                   <div className={`table_body_header_item_3`}>
-                    <p className="food_item_paragraphs">John Doe</p>
+                    <p className="food_item_paragraphs">
+                      {transfer.accountType}
+                    </p>
                   </div>
                   <div className={`table_body_header_item_4`}>
-                    <p className="food_item_paragraphs">2023-06-18 02:33:54</p>
+                    <p className="food_item_paragraphs">
+                      {moment(transfer?.createdAt).format("MMMM Do YYYY, h:mm")}
+                    </p>
                   </div>
                   <div className={`table_body_header_item_5`}>
                     <p className="food_item_paragraphs">
-                      3J8LFx8nCnqLZS7TfEU9ZjAmEXit5N7KUe
+                      {transfer.accountNumber}
                     </p>
                   </div>
                   <div className={`table_body_header_item_6`}>
-                    <p className="food_item_paragraphs">{symbol}3,800</p>
+                    <p className="food_item_paragraphs">
+                      {symbol}
+                      {transfer.amount}
+                    </p>
                   </div>
                   <div className={`table_body_header_item_7`}>
                     <p className="food_item_paragraphs">
-                      3J8LFx8nCnqLZS7TfEU9ZjA
+                      {transfer.accountName}
                     </p>
                   </div>
                   <div className={`table_body_header_item_8`}>
@@ -435,9 +445,12 @@ const TableBody = ({
                       }
                       width={83}
                       height={30}
+                      navigate={() =>
+                        toggleWithdrawalStatus(transfer?._id, transfer?.userId)
+                      }
                     />
                   </div>
-                </Link>
+                </div>
               ))}
             </>
           </section>

@@ -20,15 +20,18 @@ import axios from "axios";
 import { useGlobalContext } from "../../context/context";
 import ActivateDeposit from "../ActivateDeposit";
 import { ToastContainer, toast } from "react-toastify";
+import ActivateWithdrawals from "../ActivateWithdrawals";
 
 const Dashboard = () => {
   const { pathname } = useLocation();
   const [notification, setNotification] = useState(false);
   const [removeCustomer, setRemoveCustomer] = useState(false);
   const [depositLoading, setDepositLoading] = useState(false);
+  const [withdrawalLoading, setwithdrawalLoading] = useState(false);
   const [failedLoading, setFailedLoading] = useState(false);
   const [userId, setUserId] = useState("");
   const [updateStatus, setUpdateStatus] = useState(false);
+  const [updateWithdrawal, setupdateWithdrawal] = useState(false);
   const [depositId, setDepositId] = useState(null);
   const [visibility, setVisibility] = useState(false);
   const navigate = useNavigate();
@@ -74,6 +77,11 @@ const Dashboard = () => {
     setDepositId(id);
     setUserId(userID);
     setUpdateStatus(!updateStatus);
+  };
+  const toggleWithdrawalStatus = (id, userID) => {
+    setDepositId(id);
+    setUserId(userID);
+    setupdateWithdrawal(!updateWithdrawal);
   };
 
   const updateDepositFailed = (id) => {
@@ -129,6 +137,31 @@ const Dashboard = () => {
         setDepositLoading(false);
       });
   };
+  const withdrawalApproved = (id) => {
+    setwithdrawalLoading(true);
+    axios
+      .put(
+        `${baseUrl}transfer/${id}`,
+        {
+          status: true,
+        },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        if (data.status === 200) {
+          setwithdrawalLoading(false);
+          getUserDetails(userId);
+          toast.success("Withdrawal Approved");
+          setTimeout(() => {
+            navigate("/all-withdrawals");
+            setupdateWithdrawal(!updateStatus);
+          }, 2000);
+        }
+      })
+      .catch((error) => {
+        setwithdrawalLoading(false);
+      });
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -165,7 +198,10 @@ const Dashboard = () => {
               />
               <Route
                 element={
-                  <CustomerDetails toggleDepositStatus={toggleDepositStatus} />
+                  <CustomerDetails
+                    toggleDepositStatus={toggleDepositStatus}
+                    toggleWithdrawalStatus={toggleWithdrawalStatus}
+                  />
                 }
                 path="/user-details/:id"
               />
@@ -189,6 +225,13 @@ const Dashboard = () => {
             id={depositId}
             depositLoading={depositLoading}
             failedLoading={failedLoading}
+          />
+          <ActivateWithdrawals
+            updateStatus={updateWithdrawal}
+            toggleActivateDeposit={toggleWithdrawalStatus}
+            updateDepositApproved={withdrawalApproved}
+            id={depositId}
+            depositLoading={withdrawalLoading}
           />
         </div>
       </div>

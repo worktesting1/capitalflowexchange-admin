@@ -4,15 +4,15 @@ import "react-toastify/dist/ReactToastify.css";
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-  // const baseUrl = "http://localhost:5000/api/";
-  const baseUrl = "https://elitecryptography-api.onrender.com/api/";
+  const baseUrl = "http://localhost:5000/api/";
+  // const baseUrl = "https://elitecryptography-api.onrender.com/api/";
 
   const [allDeposits, setAllDeposits] = useState([]);
+  const [widthDrawals, setWidthDrawals] = useState([]);
+  const [widthDrawalsLoading, setWidthDrawalsLoading] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
-  const [userDeposits, setUserDeposits] = useState([]);
   const [userDetails, setUserDetails] = useState([]);
   const [dLoading, setDLoading] = useState(false);
-  const [userDLoading, setUserDLoading] = useState(false);
   const [usersLoading, setSLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
@@ -25,6 +25,7 @@ const AppProvider = ({ children }) => {
         headers: { token: token },
       })
       .then((data) => {
+        console.log(data.data);
         if (data.status === 200) {
           setAllDeposits(data.data.deposits);
           setDLoading(false);
@@ -32,6 +33,22 @@ const AppProvider = ({ children }) => {
       })
       .catch((error) => {
         setDLoading(false);
+      });
+  };
+  const getAllWithdrawals = (token) => {
+    setWidthDrawalsLoading(true);
+    axios
+      .get(`${baseUrl}transfer`, {
+        headers: { token: token },
+      })
+      .then((data) => {
+        if (data.status === 200) {
+          setWidthDrawals(data.data.transfers);
+          setWidthDrawalsLoading(false);
+        }
+      })
+      .catch((error) => {
+        setWidthDrawalsLoading(false);
       });
   };
 
@@ -51,26 +68,6 @@ const AppProvider = ({ children }) => {
       .catch((error) => {
         setSLoading(false);
       });
-  };
-
-  // Get User Deposits
-  const getUserDeposits = (id) => {
-    // setUserDLoading(true);
-    // axios
-    //   .get(`${baseUrl}deposit/${id}`, {
-    //     headers: { token: adminToken },
-    //   })
-    //   .then((data) => {
-    //     console.log(data);
-    //     if (data.status === 200) {
-    //       setUserDeposits(data.data);
-    //       setUserDLoading(false);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     setUserDLoading(false);
-    //     console.log(error);
-    //   });
   };
 
   // Get User Details
@@ -99,14 +96,14 @@ const AppProvider = ({ children }) => {
         allDeposits,
         getAllUsers,
         allUsers,
-        userDeposits,
-        getUserDeposits,
         getUserDetails,
         userDetails,
         dLoading,
         usersLoading,
         userLoading,
-        userDLoading,
+        getAllWithdrawals,
+        widthDrawals,
+        widthDrawalsLoading,
       }}
     >
       {children}

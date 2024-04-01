@@ -21,12 +21,12 @@ const CreateFoodItems = () => {
   const [bonus, setbonus] = useState(false);
   const [profit, setprofit] = useState(false);
   const [otpMessage, setotpMessage] = useState(false);
+  const [formatMessage, setformatMessage] = useState(false);
+  const [formatMessageLoading, setformatMessageLoading] = useState(false);
   const [otp, setotp] = useState("");
   const [transferStep, setTransferStep] = useState("");
   const [loadingTransfer, setLoadingT] = useState(false);
   const notify = () => toast.success("User Details Updated");
-
-  console.log(userDetails);
 
   const navigateBack = () => {
     navigate(`/user-details/${id}`);
@@ -127,7 +127,25 @@ const CreateFoodItems = () => {
         setLoadingOtpMessage(false);
       });
   };
-
+  const handleFormatMesssage = () => {
+    setformatMessageLoading(true);
+    axios
+      .put(
+        `${baseUrl}users/updatedata/${id}`,
+        { formatMessage: formatMessage },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        setformatMessageLoading(false);
+        notify();
+        setTimeout(() => {
+          navigateBack();
+        }, 2000);
+      })
+      .catch((error) => {
+        setformatMessageLoading(false);
+      });
+  };
   const activateWithdrawal = () => {
     setWLoading(true);
     axios
@@ -140,7 +158,6 @@ const CreateFoodItems = () => {
       )
       .then((data) => {
         if (data.status === 200) {
-          console.log(data);
           toast.success("Withdrawal Active");
           setWLoading(false);
           setTimeout(() => {
@@ -149,7 +166,6 @@ const CreateFoodItems = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
         setWLoading(false);
       });
   };
@@ -231,11 +247,11 @@ const CreateFoodItems = () => {
           navigate={handleBonus}
         />
         <div className="add_food_item_form_item_four">
-          <p className="add_food_item_form_labels">OTP</p>
+          <p className="add_food_item_form_labels">Code</p>
           <input
             type="text"
             className="food_item_inputs"
-            placeholder="OTP"
+            placeholder="Update Code"
             onChange={(e) => setotp(e.target.value)}
             defaultValue={userDetails.userOtp}
           />
@@ -262,7 +278,7 @@ const CreateFoodItems = () => {
           navigate={handleOtp}
         />
         <div className="add_food_item_form_item_four">
-          <p className="add_food_item_form_labels">OTP Message</p>
+          <p className="add_food_item_form_labels">Billing Format</p>
           <input
             type="text"
             className="food_item_inputs"
@@ -285,7 +301,7 @@ const CreateFoodItems = () => {
               />
             )
           }
-          title={"Update Message"}
+          title={"Format Message"}
           background={"var(--secondary-color)"}
           color={"#FFF"}
           width={"43%"}
@@ -293,11 +309,42 @@ const CreateFoodItems = () => {
           navigate={handleOtpMessage}
         />
         <div className="add_food_item_form_item_four">
-          <p className="add_food_item_form_labels">OTP Step</p>
+          <p className="add_food_item_form_labels">Billing Format Message</p>
           <input
             type="text"
             className="food_item_inputs"
-            placeholder="OTP Step"
+            placeholder="Billing Message"
+            defaultValue={userDetails.formatMessage}
+            onChange={(e) => setformatMessage(e.target.value)}
+          />
+        </div>
+        <Button
+          icon={
+            formatMessageLoading && (
+              <ColorRing
+                visible={true}
+                height="40"
+                width="40"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["#fff", "#fff", "#fff", "#fff", "#fff"]}
+              />
+            )
+          }
+          title={"Update Message"}
+          background={"var(--secondary-color)"}
+          color={"#FFF"}
+          width={"43%"}
+          height={45}
+          navigate={handleFormatMesssage}
+        />
+        <div className="add_food_item_form_item_four">
+          <p className="add_food_item_form_labels">Withdrawal Step</p>
+          <input
+            type="text"
+            className="food_item_inputs"
+            placeholder="Withdrawal Step"
             onChange={(e) => setTransferStep(e.target.value)}
             defaultValue={userDetails.transferStep}
           />
@@ -316,14 +363,13 @@ const CreateFoodItems = () => {
               />
             )
           }
-          title={"Update Step"}
+          title={"Update Withdrawal Step"}
           background={"var(--secondary-color)"}
           color={"#FFF"}
           width={"43%"}
           height={45}
           navigate={handleTransferStep}
         />
-
         <Button
           color={"white"}
           title={wLoading ? "Loading..." : "Activate Withdrawal"}

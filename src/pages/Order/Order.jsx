@@ -5,7 +5,6 @@ import { useGlobalContext } from "../../context/context";
 import { ColorRing } from "react-loader-spinner";
 
 const Order = () => {
-  const symbol = "R";
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
   const {
     getAllDeposits,
@@ -14,15 +13,27 @@ const Order = () => {
     getAllUsers,
     dLoading,
     usersLoading,
+    userDetails,
+    widthDrawals,
+    getAllWithdrawals,
   } = useGlobalContext();
 
   useEffect(() => {
     getAllDeposits(adminToken);
     getAllUsers(adminToken);
+    getAllWithdrawals(adminToken);
   }, []);
+  const { country } = userDetails;
 
   const successfulDeposits = allDeposits.filter((item) => item.status === true);
   const failedDeposits = allDeposits.filter((item) => item.status === false);
+  const successWithdrawals = widthDrawals.filter(
+    (item) => item.status === true
+  );
+  const pendingWithdrawals = widthDrawals.filter(
+    (item) => item.status === false
+  );
+  const symbol = country?.symbol;
 
   return (
     <section className="orders">
@@ -103,11 +114,50 @@ const Order = () => {
           </h3>
         </div>
       </div>
+      <div className="order_statistics">
+        <div className="order_statistics_item">
+          <p className="dashboard_paragraph">All Pending Withdrawals</p>
+          <h3 className="dashboard_header_text">
+            {dLoading ? (
+              <ColorRing
+                visible={true}
+                height="35"
+                width="35"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["black", "black", "black", "black", "black"]}
+              />
+            ) : (
+              pendingWithdrawals.length
+            )}
+          </h3>
+        </div>
+        <div className="order_statistics_item">
+          <p className="dashboard_paragraph"> Successful Withdrawals</p>
+          <h3 className="dashboard_header_text">
+            {dLoading ? (
+              <ColorRing
+                visible={true}
+                height="35"
+                width="35"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["black", "black", "black", "black", "black"]}
+              />
+            ) : (
+              successWithdrawals.length
+            )}
+          </h3>
+        </div>
+      </div>
       <div className="food_item_table">
         <div className="food_item_table_header">
           <h4>All Users</h4>
         </div>
         <TableBody
+          symbol={""}
           path={"user-details"}
           order={"Order"}
           tableData={allUsers.slice(0, 2)}
