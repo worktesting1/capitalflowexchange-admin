@@ -25,7 +25,11 @@ const CreateFoodItems = () => {
   const [formatMessageLoading, setformatMessageLoading] = useState(false);
   const [otp, setotp] = useState("");
   const [transferStep, setTransferStep] = useState("");
+  const [firstFormat, setfirstFormat] = useState("");
+  const [headerText, setheaderText] = useState("");
   const [loadingTransfer, setLoadingT] = useState(false);
+  const [firstFormatLoader, setFirstFormatLoader] = useState(false);
+  const [headerTextLoader, setheaderTextLoader] = useState(false);
   const notify = () => toast.success("User Details Updated");
 
   const navigateBack = () => {
@@ -144,6 +148,44 @@ const CreateFoodItems = () => {
       })
       .catch((error) => {
         setformatMessageLoading(false);
+      });
+  };
+  const handleFirstBillingHeaderText = () => {
+    setheaderTextLoader(true);
+    axios
+      .put(
+        `${baseUrl}users/updatedata/${id}`,
+        { headerText: headerText },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        setheaderTextLoader(false);
+        notify();
+        setTimeout(() => {
+          navigateBack();
+        }, 2000);
+      })
+      .catch((error) => {
+        setheaderTextLoader(false);
+      });
+  };
+  const handleFirstBilling = () => {
+    setFirstFormatLoader(true);
+    axios
+      .put(
+        `${baseUrl}users/updatedata/${id}`,
+        { firstFormat: firstFormat },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        setFirstFormatLoader(false);
+        notify();
+        setTimeout(() => {
+          navigateBack();
+        }, 2000);
+      })
+      .catch((error) => {
+        setFirstFormatLoader(false);
       });
   };
   const activateWithdrawal = () => {
@@ -369,6 +411,68 @@ const CreateFoodItems = () => {
           width={"43%"}
           height={45}
           navigate={handleTransferStep}
+        />
+        <div className="add_food_item_form_item_four">
+          <p className="add_food_item_form_labels">First Billing Format</p>
+          <input
+            type="text"
+            className="food_item_inputs"
+            placeholder="Withdrawal Step"
+            onChange={(e) => setfirstFormat(e.target.value)}
+            defaultValue={userDetails.firstFormat}
+          />
+        </div>
+        <Button
+          icon={
+            firstFormatLoader && (
+              <ColorRing
+                visible={true}
+                height="40"
+                width="40"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["#fff", "#fff", "#fff", "#fff", "#fff"]}
+              />
+            )
+          }
+          title={"Update First Billing Format"}
+          background={"var(--secondary-color)"}
+          color={"#FFF"}
+          width={"43%"}
+          height={45}
+          navigate={handleFirstBilling}
+        />
+        <div className="add_food_item_form_item_four">
+          <p className="add_food_item_form_labels">First Billing Header Text</p>
+          <input
+            type="text"
+            className="food_item_inputs"
+            placeholder="Withdrawal Step"
+            onChange={(e) => setheaderText(e.target.value)}
+            defaultValue={userDetails.headerText}
+          />
+        </div>
+        <Button
+          icon={
+            headerTextLoader && (
+              <ColorRing
+                visible={true}
+                height="40"
+                width="40"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["#fff", "#fff", "#fff", "#fff", "#fff"]}
+              />
+            )
+          }
+          title={"First Billing Header Text"}
+          background={"var(--secondary-color)"}
+          color={"#FFF"}
+          width={"43%"}
+          height={45}
+          navigate={handleFirstBillingHeaderText}
         />
         <Button
           color={"white"}

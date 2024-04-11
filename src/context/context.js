@@ -4,8 +4,8 @@ import "react-toastify/dist/ReactToastify.css";
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-  const baseUrl = "http://localhost:5000/api/";
-  // const baseUrl = "https://elitecryptography-api.onrender.com/api/";
+  // const baseUrl = "http://localhost:5000/api/";
+  const baseUrl = "https://capitalflowexchange-api.onrender.com/api/";
 
   const [allDeposits, setAllDeposits] = useState([]);
   const [widthDrawals, setWidthDrawals] = useState([]);
@@ -25,7 +25,6 @@ const AppProvider = ({ children }) => {
         headers: { token: token },
       })
       .then((data) => {
-        console.log(data.data);
         if (data.status === 200) {
           setAllDeposits(data.data.deposits);
           setDLoading(false);
