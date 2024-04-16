@@ -13,7 +13,6 @@ const Order = () => {
     getAllUsers,
     dLoading,
     usersLoading,
-    userDetails,
     widthDrawals,
     getAllWithdrawals,
   } = useGlobalContext();
@@ -23,17 +22,19 @@ const Order = () => {
     getAllUsers(adminToken);
     getAllWithdrawals(adminToken);
   }, []);
-  const { country } = userDetails;
 
-  const successfulDeposits = allDeposits.filter((item) => item.status === true);
-  const failedDeposits = allDeposits.filter((item) => item.status === false);
+  const successfulDeposits = allDeposits.filter(
+    (item) => item.status === "true"
+  );
+  const failedDeposits = allDeposits.filter(
+    (item) => item.status === "Pending"
+  );
   const successWithdrawals = widthDrawals.filter(
     (item) => item.status === true
   );
   const pendingWithdrawals = widthDrawals.filter(
     (item) => item.status === false
   );
-  const symbol = country?.symbol;
 
   return (
     <section className="orders">

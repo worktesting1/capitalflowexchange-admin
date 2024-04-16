@@ -360,10 +360,24 @@ const TableBody = ({
                       </div>
                       <div className={`table_body_header_item_8`}>
                         <Button
-                          background={status ? "#EDFFF9" : "#FFF3E7"}
-                          title={status ? "Approved" : "Pending"}
+                          background={
+                            status === "true"
+                              ? "#EDFFF9"
+                              : status === "false" || status === "Pending"
+                              ? "#FFF3E7"
+                              : ""
+                          }
+                          title={
+                            status === "Pending"
+                              ? "Pending"
+                              : status === "false"
+                              ? "Failed"
+                              : "Successful"
+                          }
                           color={
-                            status ? "var(--secondary-color)" : "var(--color1)"
+                            status === "true"
+                              ? "var(--secondary-color)"
+                              : "var(--color1)"
                           }
                           width={83}
                           height={30}

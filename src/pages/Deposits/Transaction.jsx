@@ -101,11 +101,25 @@ const Deposits = () => {
                   </div>
                   <div className="status">
                     <Button
-                      title={status ? "Approved" : "Pending"}
+                      title={
+                        status === "true"
+                          ? "Approved"
+                          : status === "Pending"
+                          ? "Pending"
+                          : "Failed"
+                      }
                       width={100}
                       height={30}
-                      background={!status ? "#FFF3E7" : "#EDFFF9"}
-                      color={!status ? "#999DA1" : "27AE61"}
+                      background={
+                        status === "false" || status === "Pending"
+                          ? "#FFF3E7"
+                          : "#EDFFF9"
+                      }
+                      color={
+                        status === "false" || status === "Pending"
+                          ? "#999DA1"
+                          : "27AE61"
+                      }
                     />
                   </div>
                   <div className="reference">

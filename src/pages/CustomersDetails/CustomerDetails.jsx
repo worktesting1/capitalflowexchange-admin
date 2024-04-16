@@ -48,9 +48,15 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
 
   userDeposits = allDeposits.filter((deposit) => deposit.userId === id);
   userWithdrawals = widthDrawals.filter((transfer) => transfer.userId === id);
+
   const getPendingDepositsAmount = () => {
     return userDeposits
-      .filter((deposit) => deposit.status === false)
+      .filter((deposit) => deposit.status === "Pending")
+      .reduce((accumulator, { amount }) => accumulator + amount / 1, 0);
+  };
+  const getFailedDepositsAmount = () => {
+    return userDeposits
+      .filter((deposit) => deposit.status === "false")
       .reduce((accumulator, { amount }) => accumulator + amount / 1, 0);
   };
   const getPendingWithdrawals = () => {
@@ -60,7 +66,7 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
   };
   const getSuccessfulDepositsAmount = () => {
     return userDeposits
-      .filter((deposit) => deposit.status === true)
+      .filter((deposit) => deposit.status === "true")
       .reduce((accumulator, { amount }) => accumulator + amount / 1, 0);
   };
   const getSuccessWithdrawals = () => {
@@ -175,6 +181,8 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
             </h3>
           </div>
         </div>
+      </div>
+      <div className="application_statistics_container">
         <div>
           <div>
             <p className="dashboard_paragraph">Pending Deposits</p>
@@ -196,7 +204,48 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
             </h3>
           </div>
         </div>
-
+        <div>
+          <div>
+            <p className="dashboard_paragraph">Failed Deposits</p>
+            <h3 className="dashboard_header_text">
+              {userLoading ? (
+                <ColorRing
+                  visible={true}
+                  height="30"
+                  width="30"
+                  ariaLabel="blocks-loading"
+                  wrapperStyle={{}}
+                  wrapperClass="blocks-wrapper"
+                  colors={["black", "black", "black", "black", "black"]}
+                />
+              ) : (
+                ` ${symbol}
+                ${formatter.format(getFailedDepositsAmount())}`
+              )}
+            </h3>
+          </div>
+        </div>
+        <div>
+          <div>
+            <p className="dashboard_paragraph">Successful Withdrawals</p>
+            <h3 className="dashboard_header_text">
+              {userLoading ? (
+                <ColorRing
+                  visible={true}
+                  height="30"
+                  width="30"
+                  ariaLabel="blocks-loading"
+                  wrapperStyle={{}}
+                  wrapperClass="blocks-wrapper"
+                  colors={["black", "black", "black", "black", "black"]}
+                />
+              ) : (
+                ` ${symbol}
+                ${formatter.format(getSuccessWithdrawals())}`
+              )}
+            </h3>
+          </div>
+        </div>
         <div>
           <div>
             <p className="dashboard_paragraph">Completed Deposits</p>

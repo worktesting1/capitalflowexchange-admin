@@ -36,8 +36,7 @@ const Dashboard = () => {
   const [visibility, setVisibility] = useState(false);
   const navigate = useNavigate();
   const [deleteLoading, setDeleteLoader] = useState(false);
-  const { baseUrl, getAllUsers, getUserDeposits, getUserDetails } =
-    useGlobalContext();
+  const { baseUrl, getAllUsers, getUserDetails } = useGlobalContext();
 
   const toggleVisibility = () => setVisibility(!visibility);
 
@@ -88,18 +87,17 @@ const Dashboard = () => {
     setFailedLoading(true);
     axios
       .put(
-        `${baseUrl}deposit/admin/${id}`,
+        `${baseUrl}deposit/${id}`,
         {
-          status: "failed",
+          status: false,
         },
-        { headers: { Authorization: `Bearer ${adminToken}` } }
+        { headers: { token: adminToken } }
       )
       .then((data) => {
         if (data.status === 200) {
-          getUserDeposits(id);
           getUserDetails(id);
           setFailedLoading(false);
-          toast.success("Deposit Approved");
+          toast.success("Deposit Failed");
           setTimeout(() => {
             navigate("/all-deposits");
             setUpdateStatus(!updateStatus);
