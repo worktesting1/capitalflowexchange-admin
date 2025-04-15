@@ -26,11 +26,15 @@ const AppProvider = ({ children }) => {
       })
       .then((data) => {
         if (data.status === 200) {
+          console.log(data);
+
           setAllDeposits(data.data.deposits);
           setDLoading(false);
         }
       })
       .catch((error) => {
+        console.log(error);
+
         setDLoading(false);
       });
   };

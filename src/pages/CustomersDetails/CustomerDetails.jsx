@@ -51,7 +51,7 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
 
   const getPendingDepositsAmount = () => {
     return userDeposits
-      .filter((deposit) => deposit.status === "Pending")
+      .filter((deposit) => deposit.status.toUpperCase() === "PENDING")
       .reduce((accumulator, { amount }) => accumulator + amount / 1, 0);
   };
   const getFailedDepositsAmount = () => {
@@ -74,6 +74,8 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
       .filter((transfer) => transfer.status === true)
       .reduce((accumulator, { amount }) => accumulator + amount / 1, 0);
   };
+
+  console.log(userDeposits);
 
   const toggleTable = (e) => {
     if (e.target.id === "1") {

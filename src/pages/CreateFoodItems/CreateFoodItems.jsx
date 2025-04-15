@@ -213,6 +213,37 @@ const CreateFoodItems = () => {
         setWLoading(false);
       });
   };
+  const activateDeposit = () => {
+    setactiveDLoading(true);
+    axios
+      .put(
+        `${baseUrl}users/updatedata/${id}`,
+        {
+          accessDeposit:
+            accessDeposit === "hello" || accessDeposit === "inactive"
+              ? "active"
+              : "inactive",
+        },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        if (data.status === 200) {
+          getUserDetails(id);
+          toast.success(
+            accessDeposit !== "active"
+              ? "Deposit Activated"
+              : "Deposit Inactive"
+          );
+          setactiveDLoading(false);
+          setTimeout(() => {
+            navigate("/users");
+          }, 2000);
+        }
+      })
+      .catch((error) => {
+        setactiveDLoading(false);
+      });
+  };
 
   useEffect(() => {
     getUserDetails(id);
