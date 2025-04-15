@@ -63,6 +63,8 @@ const AppProvider = ({ children }) => {
         headers: { token: token },
       })
       .then((data) => {
+        console.log(data);
+
         if (data.status === 200) {
           setSLoading(false);
           setAllUsers(data.data);

@@ -36,6 +36,7 @@ const Login = () => {
         }
       })
       .catch((error) => {
+        console.log(error);
         setLoading(false);
         if (error.response.data === "Wrong credentials") {
           toast.error("Email or Password is not registered");
