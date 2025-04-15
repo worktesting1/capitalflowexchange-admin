@@ -12,6 +12,7 @@ const CreateFoodItems = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { baseUrl, getUserDetails, userDetails } = useGlobalContext();
+  const { accessDeposit } = userDetails;
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
   const [wLoading, setWLoading] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -29,6 +30,7 @@ const CreateFoodItems = () => {
   const [headerText, setheaderText] = useState("");
   const [loadingTransfer, setLoadingT] = useState(false);
   const [firstFormatLoader, setFirstFormatLoader] = useState(false);
+  const [activateDepositLoading, setactiveDLoading] = useState(false);
   const [headerTextLoader, setheaderTextLoader] = useState(false);
   const notify = () => toast.success("User Details Updated");
 
@@ -478,6 +480,17 @@ const CreateFoodItems = () => {
           color={"white"}
           title={wLoading ? "Loading..." : "Activate Withdrawal"}
           navigate={activateWithdrawal}
+        />
+        <Button
+          color={"white"}
+          title={
+            activateDepositLoading
+              ? "Loading..."
+              : accessDeposit === "inactive" || accessDeposit === "hello"
+              ? "Activate Deposit"
+              : "Deactivate Deposit"
+          }
+          navigate={activateDeposit}
         />
       </div>
       <ToastContainer />
