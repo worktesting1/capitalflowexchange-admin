@@ -51,7 +51,7 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
 
   const getPendingDepositsAmount = () => {
     return userDeposits
-      .filter((deposit) => deposit.status.toUpperCase() === "PENDING")
+      .filter((deposit) => deposit.status === "pending")
       .reduce((accumulator, { amount }) => accumulator + amount / 1, 0);
   };
   const getFailedDepositsAmount = () => {
@@ -61,7 +61,7 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
   };
   const getPendingWithdrawals = () => {
     return widthDrawals
-      .filter((transfer) => transfer.status === false)
+      .filter((transfer) => transfer.status === "false")
       .reduce((accumulator, { amount }) => accumulator + amount / 1, 0);
   };
   const getSuccessfulDepositsAmount = () => {
@@ -71,11 +71,9 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
   };
   const getSuccessWithdrawals = () => {
     return userWithdrawals
-      .filter((transfer) => transfer.status === true)
+      .filter((transfer) => transfer.status === "true")
       .reduce((accumulator, { amount }) => accumulator + amount / 1, 0);
   };
-
-  console.log(userDeposits);
 
   const toggleTable = (e) => {
     if (e.target.id === "1") {
