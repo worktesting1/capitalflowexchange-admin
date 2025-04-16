@@ -75,6 +75,8 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
       .reduce((accumulator, { amount }) => accumulator + amount / 1, 0);
   };
 
+  console.log(userDeposits);
+
   const toggleTable = (e) => {
     if (e.target.id === "1") {
       setDetails("customers_order_details");

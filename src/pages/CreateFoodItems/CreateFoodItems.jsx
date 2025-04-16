@@ -12,9 +12,10 @@ const CreateFoodItems = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { baseUrl, getUserDetails, userDetails } = useGlobalContext();
-  const { accessDeposit } = userDetails;
+  const { accessDeposit, symbol, country } = userDetails;
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
   const [wLoading, setWLoading] = useState(false);
+  const [symbolLoading, setSymbolLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingBonus, setLoadingBonus] = useState(false);
   const [loadingOtp, setLoadingOtp] = useState(false);
@@ -30,6 +31,7 @@ const CreateFoodItems = () => {
   const [headerText, setheaderText] = useState("");
   const [loadingTransfer, setLoadingT] = useState(false);
   const [firstFormatLoader, setFirstFormatLoader] = useState(false);
+  const [loadingInvestStatus, setLoadingInvestStatus] = useState(false);
   const [activateDepositLoading, setactiveDLoading] = useState(false);
   const [headerTextLoader, setheaderTextLoader] = useState(false);
   const notify = () => toast.success("User Details Updated");
@@ -242,6 +244,60 @@ const CreateFoodItems = () => {
       })
       .catch((error) => {
         setactiveDLoading(false);
+      });
+  };
+
+  const getSymbol = symbol == "" ? "$" : symbol === "$" ? country.symbol : "";
+
+  const handleSymbol = () => {
+    setSymbolLoading(true);
+    axios
+      .put(
+        `${baseUrl}users/updatedata/${id}`,
+        {
+          symbol: getSymbol,
+        },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        if (data.status === 200) {
+          if (symbol !== "$") {
+            toast.success("You Can Pay in Dollar");
+          } else {
+            toast.success("You Can Pay in their currency");
+          }
+          setSymbolLoading(false);
+          setTimeout(() => {
+            navigate("/user-details/" + userDetails._id);
+          }, 2000);
+        }
+      })
+      .catch((error) => {
+        setSymbolLoading(false);
+      });
+  };
+
+  const handleStartTrade = () => {
+    setLoadingInvestStatus(true);
+
+    axios
+      .put(
+        `${baseUrl}users/updatedata/${id}`,
+        {
+          startTrade: userDetails.startTrade === false ? true : false,
+        },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        setLoadingInvestStatus(false);
+        toast.success("Trade Start");
+        getUserDetails(id);
+        setTimeout(() => {
+          navigateBack();
+        }, 2000);
+      })
+      .catch((error) => {
+        setLoadingInvestStatus(false);
       });
   };
 
@@ -522,6 +578,39 @@ const CreateFoodItems = () => {
               : "Deactivate Deposit"
           }
           navigate={activateDeposit}
+        />
+        <Button
+          color={"white"}
+          title={
+            symbolLoading
+              ? "Loading..."
+              : symbol === country?.symbol || symbol === ""
+              ? "Pay $"
+              : "Pay In Local Currency"
+          }
+          navigate={handleSymbol}
+        />
+        <Button
+          icon={
+            loadingInvestStatus && (
+              <ColorRing
+                visible={true}
+                height="40"
+                width="40"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["#fff", "#fff", "#fff", "#fff", "#fff"]}
+              />
+            )
+          }
+          title={
+            userDetails.investStatus === true ? "End Trade" : "Start Trade"
+          }
+          background={"var(--secondary-color)"}
+          color={"#FFF"}
+          height={45}
+          navigate={handleStartTrade}
         />
       </div>
       <ToastContainer />

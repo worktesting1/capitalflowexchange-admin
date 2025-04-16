@@ -363,12 +363,12 @@ const TableBody = ({
                           background={
                             status === "true"
                               ? "#EDFFF9"
-                              : status === "false" || status === "Pending"
+                              : status === "false" || status === "pending"
                               ? "#FFF3E7"
                               : ""
                           }
                           title={
-                            status === "Pending"
+                            status === "pending"
                               ? "Pending"
                               : status === "false"
                               ? "Failed"

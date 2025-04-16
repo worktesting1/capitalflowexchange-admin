@@ -83,6 +83,8 @@ const AppProvider = ({ children }) => {
         headers: { token: adminToken },
       })
       .then((data) => {
+        console.log(data);
+
         if (data.status === 200) {
           setUserDetails(data.data);
           setUserLoading(false);
