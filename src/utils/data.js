@@ -2,11 +2,11 @@ import imageOne from "../asset/dashboard.svg";
 import imageFive from "../asset/order.svg";
 import customers from "../asset/profile-2user copy.svg";
 import delivery from "../asset/security-user copy.svg";
-import user from "../asset/user.svg";
+// import user from "../asset/user.svg";
 import settings from "../asset/setting.svg";
 import contact from "../asset/contact.svg";
 import about from "../asset/about.svg";
-import Wallet from "../asset/wallet.svg";
+// import Wallet from "../asset/wallet.svg";
 import { MdOutlinePrivacyTip } from "react-icons/md";
 import { RiTerminalWindowFill } from "react-icons/ri";
 

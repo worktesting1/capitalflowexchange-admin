@@ -284,13 +284,19 @@ const CreateFoodItems = () => {
       .put(
         `${baseUrl}users/updatedata/${id}`,
         {
-          startTrade: userDetails.startTrade === false ? true : false,
+          startTrade: userDetails.startTrade === "true" ? "false" : "true",
+          email: userDetails.email,
+          name: `${userDetails.firstName} ${userDetails.lastName}`,
         },
         { headers: { token: adminToken } }
       )
       .then((data) => {
         setLoadingInvestStatus(false);
-        toast.success("Trade Start");
+        if (userDetails.startTrade === "false") {
+          toast.success("Trade Start");
+        } else {
+          toast.success("Trade Ended");
+        }
         getUserDetails(id);
         setTimeout(() => {
           navigateBack();
@@ -304,6 +310,8 @@ const CreateFoodItems = () => {
   useEffect(() => {
     getUserDetails(id);
   }, []);
+
+  console.log(userDetails.startTrade);
 
   return (
     <section className="add_food_item_container">
@@ -605,7 +613,7 @@ const CreateFoodItems = () => {
             )
           }
           title={
-            userDetails.investStatus === true ? "End Trade" : "Start Trade"
+            userDetails.startTrade === "false" ? "Start Trade" : "End Trade"
           }
           background={"var(--secondary-color)"}
           color={"#FFF"}

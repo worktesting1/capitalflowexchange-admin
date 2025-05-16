@@ -42,7 +42,7 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
     status,
   } = userDetails;
 
-  const symbol = country?.symbol;
+  const symbol = "$";
 
   // Update Deposit to failed status
 
