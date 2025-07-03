@@ -25,11 +25,14 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
     getAllDeposits,
     widthDrawals,
     getAllWithdrawals,
+    getAllFundingRequest,
+    fundingRequests,
+    userKyc,
+    getUserKYC,
   } = useGlobalContext();
   const {
     profit,
     bonus,
-
     firstName,
     lastName,
     country,
@@ -75,13 +78,13 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
       .reduce((accumulator, { amount }) => accumulator + amount / 1, 0);
   };
 
-  console.log(userDeposits);
-
   const toggleTable = (e) => {
     if (e.target.id === "1") {
       setDetails("customers_order_details");
     } else if (e.target.id === "2") {
       setDetails("customers_favorite_details");
+    } else if (e.target.id === "3") {
+      setDetails("kyc_details");
     }
   };
 
@@ -90,6 +93,8 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
     getUserDetails(id);
     getAllDeposits(adminToken);
     getAllWithdrawals(adminToken);
+    getAllFundingRequest(adminToken);
+    getUserKYC(adminToken, id);
   }, []);
 
   return (
@@ -370,6 +375,22 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
           }
           navigate={toggleTable}
         />
+        <Button
+          id={3}
+          border={"1px #E6E6E6 solid"}
+          title={"KYC"}
+          height={35}
+          width={115}
+          borderRadius={30}
+          color={details === "kyc_details" ? "white" : "var(--color5)"}
+          fontsize={14}
+          background={
+            details === "kyc_details"
+              ? "var(--secondary-color)"
+              : "var(--color2)"
+          }
+          navigate={toggleTable}
+        />
       </div>
       <div className="food_item_table">
         <div className="food_item_table_header">
@@ -417,7 +438,9 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
           }
           tableData={
             details === "customers_favorite_details"
-              ? userDeposits
+              ? fundingRequests
+              : details === "kyc_details"
+              ? userKyc[0]
               : userWithdrawals
           }
           loading={userDLoading}

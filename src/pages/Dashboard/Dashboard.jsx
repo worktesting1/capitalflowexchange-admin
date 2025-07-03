@@ -87,9 +87,9 @@ const Dashboard = () => {
     setFailedLoading(true);
     axios
       .put(
-        `${baseUrl}deposit/${id}`,
+        `${baseUrl}admin/approve-funding/${id}`,
         {
-          status: false,
+          status: "reject",
         },
         { headers: { token: adminToken } }
       )
@@ -110,17 +110,17 @@ const Dashboard = () => {
   };
 
   // Update Deposit to Approved Status
-  const updateDepositApproved = (id) => {
+  const updateDepositApproved = (requestId) => {
     setDepositLoading(true);
     axios
       .put(
-        `${baseUrl}deposit/${id}`,
-        {
-          status: true,
-        },
+        `${baseUrl}admin/approve-funding/${requestId}`,
+        { status: "approved" },
         { headers: { token: adminToken } }
       )
       .then((data) => {
+        console.log(data);
+
         if (data.status === 200) {
           setDepositLoading(false);
           getUserDetails(userId);
@@ -132,6 +132,8 @@ const Dashboard = () => {
         }
       })
       .catch((error) => {
+        console.log(error);
+
         setDepositLoading(false);
       });
   };

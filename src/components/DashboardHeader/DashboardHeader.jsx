@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./DashboardHeader.css";
-import LoginImageHero from "../../asset/profit.svg";
+import LoginImageHero from "../../asset/profit.png";
 import { RiMenu3Line } from "react-icons/ri";
 
 const DashboardHeader = ({ toggleVisibility }) => {
@@ -9,7 +9,7 @@ const DashboardHeader = ({ toggleVisibility }) => {
       <img src={LoginImageHero} alt="" className="hero_login_image" />
       <RiMenu3Line onClick={toggleVisibility} />
       <div className="profile">
-        <h3 className="profile_text">CF</h3>
+        <h3 className="profile_text">CM</h3>
       </div>
     </header>
   );

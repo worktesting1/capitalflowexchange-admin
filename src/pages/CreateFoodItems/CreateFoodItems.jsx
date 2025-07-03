@@ -17,19 +17,21 @@ const CreateFoodItems = () => {
   const [wLoading, setWLoading] = useState(false);
   const [symbolLoading, setSymbolLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [loadingBonus, setLoadingBonus] = useState(false);
-  const [loadingOtp, setLoadingOtp] = useState(false);
-  const [loadingOtpMessage, setLoadingOtpMessage] = useState(false);
-  const [bonus, setbonus] = useState(false);
   const [profit, setprofit] = useState(false);
-  const [otpMessage, setotpMessage] = useState(false);
-  const [formatMessage, setformatMessage] = useState(false);
-  const [formatMessageLoading, setformatMessageLoading] = useState(false);
-  const [otp, setotp] = useState("");
-  const [transferStep, setTransferStep] = useState("");
   const [firstFormat, setfirstFormat] = useState("");
+  const [forthCode, setForthCode] = useState("");
+  const [forthMessage, setForthMessage] = useState("");
+  const [secondMLoader, setSecondMLoader] = useState(false);
+  const [secondLoader, setSecondLoader] = useState(false);
+  const [thirdLoader, setthirdLoader] = useState(false);
+  const [thirdMLoader, setthirdMLoader] = useState(false);
+  const [forthLoader, setforthLoader] = useState(false);
+  const [forthMLoader, setforthMLoader] = useState(false);
+  const [secondCode, setsecondCode] = useState("");
+  const [secondMessage, setsecondMessage] = useState("");
+  const [thirdMessage, setthirdMessage] = useState("");
+  const [thirdCode, setthirdCode] = useState("");
   const [headerText, setheaderText] = useState("");
-  const [loadingTransfer, setLoadingT] = useState(false);
   const [firstFormatLoader, setFirstFormatLoader] = useState(false);
   const [loadingInvestStatus, setLoadingInvestStatus] = useState(false);
   const [activateDepositLoading, setactiveDLoading] = useState(false);
@@ -40,44 +42,6 @@ const CreateFoodItems = () => {
     navigate(`/user-details/${id}`);
   };
 
-  const handleBonus = () => {
-    setLoadingBonus(true);
-    axios
-      .put(
-        `${baseUrl}users/updatedata/${id}`,
-        { bonus: bonus },
-        { headers: { token: adminToken } }
-      )
-      .then((data) => {
-        setLoadingBonus(false);
-        notify();
-        setTimeout(() => {
-          navigateBack();
-        }, 2000);
-      })
-      .catch((error) => {
-        setLoadingBonus(false);
-      });
-  };
-  const handleTransferStep = () => {
-    setLoadingT(true);
-    axios
-      .put(
-        `${baseUrl}users/updatedata/${id}`,
-        { transferStep: transferStep },
-        { headers: { token: adminToken } }
-      )
-      .then((data) => {
-        setLoadingT(false);
-        notify();
-        setTimeout(() => {
-          navigateBack();
-        }, 2000);
-      })
-      .catch((error) => {
-        setLoadingT(false);
-      });
-  };
   const handleProfit = () => {
     setLoading(true);
     axios
@@ -97,63 +61,122 @@ const CreateFoodItems = () => {
         setLoading(false);
       });
   };
-  const handleOtp = () => {
-    setLoadingOtp(true);
+
+  const handleSecondBilling = () => {
+    setSecondLoader(true);
     axios
       .put(
         `${baseUrl}users/updatedata/${id}`,
-        { userOtp: otp },
+        { secondCode },
         { headers: { token: adminToken } }
       )
       .then((data) => {
-        setLoadingOtp(false);
+        setSecondLoader(false);
         notify();
         setTimeout(() => {
           navigateBack();
         }, 2000);
       })
       .catch((error) => {
-        setLoadingOtp(false);
+        setSecondLoader(false);
       });
   };
-  const handleOtpMessage = () => {
-    setLoadingOtpMessage(true);
+  const handleSecondBillingMessage = () => {
+    setSecondMLoader(true);
     axios
       .put(
         `${baseUrl}users/updatedata/${id}`,
-        { otpMessage: otpMessage },
+        { secondMessage },
         { headers: { token: adminToken } }
       )
       .then((data) => {
-        setLoadingOtpMessage(false);
+        setSecondMLoader(false);
         notify();
         setTimeout(() => {
           navigateBack();
         }, 2000);
       })
       .catch((error) => {
-        setLoadingOtpMessage(false);
+        setSecondMLoader(false);
       });
   };
-  const handleFormatMesssage = () => {
-    setformatMessageLoading(true);
+  const handleThirdBilling = () => {
+    setthirdLoader(true);
     axios
       .put(
         `${baseUrl}users/updatedata/${id}`,
-        { formatMessage: formatMessage },
+        { thirdCode },
         { headers: { token: adminToken } }
       )
       .then((data) => {
-        setformatMessageLoading(false);
+        setthirdLoader(false);
         notify();
         setTimeout(() => {
           navigateBack();
         }, 2000);
       })
       .catch((error) => {
-        setformatMessageLoading(false);
+        setthirdLoader(false);
       });
   };
+  const handleThirdBillingMessage = () => {
+    setthirdMLoader(true);
+    axios
+      .put(
+        `${baseUrl}users/updatedata/${id}`,
+        { thirdMessage },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        setthirdMLoader(false);
+        notify();
+        setTimeout(() => {
+          navigateBack();
+        }, 2000);
+      })
+      .catch((error) => {
+        setthirdMLoader(false);
+      });
+  };
+  const handleForthBilling = () => {
+    setforthLoader(true);
+    axios
+      .put(
+        `${baseUrl}users/updatedata/${id}`,
+        { forthCode },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        setforthLoader(false);
+        notify();
+        setTimeout(() => {
+          navigateBack();
+        }, 2000);
+      })
+      .catch((error) => {
+        setforthLoader(false);
+      });
+  };
+  const handleForthBillingMessage = () => {
+    setforthMLoader(true);
+    axios
+      .put(
+        `${baseUrl}users/updatedata/${id}`,
+        { forthMessage },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        setforthMLoader(false);
+        notify();
+        setTimeout(() => {
+          navigateBack();
+        }, 2000);
+      })
+      .catch((error) => {
+        setforthMLoader(false);
+      });
+  };
+
   const handleFirstBillingHeaderText = () => {
     setheaderTextLoader(true);
     axios
@@ -311,8 +334,6 @@ const CreateFoodItems = () => {
     getUserDetails(id);
   }, []);
 
-  console.log(userDetails.startTrade);
-
   return (
     <section className="add_food_item_container">
       <CreateFoodHeader
@@ -353,20 +374,20 @@ const CreateFoodItems = () => {
           height={45}
           navigate={handleProfit}
         />
+
         <div className="add_food_item_form_item_four">
-          <p className="add_food_item_form_labels">Bonus</p>
+          <p className="add_food_item_form_labels">Second Code</p>
           <input
             type="text"
-            name="bonus"
             className="food_item_inputs"
-            placeholder="Bonus"
-            onChange={(e) => setbonus(e.target.value)}
-            defaultValue={userDetails.bonus}
+            placeholder="Update First Code"
+            onChange={(e) => setsecondCode(e.target.value)}
+            defaultValue={userDetails.secondCode}
           />
         </div>
         <Button
           icon={
-            loadingBonus && (
+            secondLoader && (
               <ColorRing
                 visible={true}
                 height="40"
@@ -378,26 +399,26 @@ const CreateFoodItems = () => {
               />
             )
           }
-          title={"Update Bonus"}
+          title={"Update Code"}
           background={"var(--secondary-color)"}
           color={"#FFF"}
           width={"43%"}
           height={45}
-          navigate={handleBonus}
+          navigate={handleSecondBilling}
         />
         <div className="add_food_item_form_item_four">
-          <p className="add_food_item_form_labels">Code</p>
+          <p className="add_food_item_form_labels">Second Billing Format</p>
           <input
             type="text"
             className="food_item_inputs"
-            placeholder="Update Code"
-            onChange={(e) => setotp(e.target.value)}
-            defaultValue={userDetails.userOtp}
+            placeholder="Update First Code"
+            onChange={(e) => setsecondMessage(e.target.value)}
+            defaultValue={userDetails.secondMessage}
           />
         </div>
         <Button
           icon={
-            loadingOtp && (
+            secondMLoader && (
               <ColorRing
                 visible={true}
                 height="40"
@@ -409,26 +430,26 @@ const CreateFoodItems = () => {
               />
             )
           }
-          title={"Update OTP"}
+          title={"Update Format"}
           background={"var(--secondary-color)"}
           color={"#FFF"}
           width={"43%"}
           height={45}
-          navigate={handleOtp}
+          navigate={handleSecondBillingMessage}
         />
         <div className="add_food_item_form_item_four">
-          <p className="add_food_item_form_labels">Billing Format</p>
+          <p className="add_food_item_form_labels">Third Code</p>
           <input
             type="text"
             className="food_item_inputs"
-            placeholder="OTP Message"
-            defaultValue={userDetails.otpMessage}
-            onChange={(e) => setotpMessage(e.target.value)}
+            placeholder="Update First Code"
+            onChange={(e) => setthirdCode(e.target.value)}
+            defaultValue={userDetails.thirdCode}
           />
         </div>
         <Button
           icon={
-            loadingOtpMessage && (
+            thirdLoader && (
               <ColorRing
                 visible={true}
                 height="40"
@@ -440,26 +461,26 @@ const CreateFoodItems = () => {
               />
             )
           }
-          title={"Format Message"}
+          title={"Update Code"}
           background={"var(--secondary-color)"}
           color={"#FFF"}
           width={"43%"}
           height={45}
-          navigate={handleOtpMessage}
+          navigate={handleThirdBilling}
         />
         <div className="add_food_item_form_item_four">
-          <p className="add_food_item_form_labels">Billing Format Message</p>
+          <p className="add_food_item_form_labels">Third Billing Format</p>
           <input
             type="text"
             className="food_item_inputs"
-            placeholder="Billing Message"
-            defaultValue={userDetails.formatMessage}
-            onChange={(e) => setformatMessage(e.target.value)}
+            placeholder="Update First Code"
+            onChange={(e) => setthirdMessage(e.target.value)}
+            defaultValue={userDetails.thirdMessage}
           />
         </div>
         <Button
           icon={
-            formatMessageLoading && (
+            thirdMLoader && (
               <ColorRing
                 visible={true}
                 height="40"
@@ -471,26 +492,26 @@ const CreateFoodItems = () => {
               />
             )
           }
-          title={"Update Message"}
+          title={"Update Format"}
           background={"var(--secondary-color)"}
           color={"#FFF"}
           width={"43%"}
           height={45}
-          navigate={handleFormatMesssage}
+          navigate={handleThirdBillingMessage}
         />
         <div className="add_food_item_form_item_four">
-          <p className="add_food_item_form_labels">Withdrawal Step</p>
+          <p className="add_food_item_form_labels">Forth Code</p>
           <input
             type="text"
             className="food_item_inputs"
-            placeholder="Withdrawal Step"
-            onChange={(e) => setTransferStep(e.target.value)}
-            defaultValue={userDetails.transferStep}
+            placeholder="Update First Code"
+            onChange={(e) => setForthCode(e.target.value)}
+            defaultValue={userDetails.forthCode}
           />
         </div>
         <Button
           icon={
-            loadingTransfer && (
+            forthLoader && (
               <ColorRing
                 visible={true}
                 height="40"
@@ -502,13 +523,45 @@ const CreateFoodItems = () => {
               />
             )
           }
-          title={"Update Withdrawal Step"}
+          title={"Update Code"}
           background={"var(--secondary-color)"}
           color={"#FFF"}
           width={"43%"}
           height={45}
-          navigate={handleTransferStep}
+          navigate={handleForthBilling}
         />
+        <div className="add_food_item_form_item_four">
+          <p className="add_food_item_form_labels">Forth Billing Format</p>
+          <input
+            type="text"
+            className="food_item_inputs"
+            placeholder="Update First Code"
+            onChange={(e) => setForthMessage(e.target.value)}
+            defaultValue={userDetails.forthMessage}
+          />
+        </div>
+        <Button
+          icon={
+            forthMLoader && (
+              <ColorRing
+                visible={true}
+                height="40"
+                width="40"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["#fff", "#fff", "#fff", "#fff", "#fff"]}
+              />
+            )
+          }
+          title={"Update Format"}
+          background={"var(--secondary-color)"}
+          color={"#FFF"}
+          width={"43%"}
+          height={45}
+          navigate={handleForthBillingMessage}
+        />
+
         <div className="add_food_item_form_item_four">
           <p className="add_food_item_form_labels">First Billing Format</p>
           <input

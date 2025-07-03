@@ -4,8 +4,8 @@ import "react-toastify/dist/ReactToastify.css";
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-  // const baseUrl = "http://localhost:5000/api/";
-  const baseUrl = "https://capitalflowexchange-api.onrender.com/api/";
+  const baseUrl = "http://localhost:5000/api/";
+  // const baseUrl = "https://capitalflowexchange-api.onrender.com/api/";
 
   const [allDeposits, setAllDeposits] = useState([]);
   const [widthDrawals, setWidthDrawals] = useState([]);
@@ -15,20 +15,22 @@ const AppProvider = ({ children }) => {
   const [dLoading, setDLoading] = useState(false);
   const [usersLoading, setSLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
+  const [fundingRequests, setFundingRequests] = useState([]);
+  const [userKyc, setUserKYC] = useState([]);
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
 
   // Get All Deposits
   const getAllDeposits = (token) => {
     setDLoading(true);
     axios
-      .get(`${baseUrl}deposit`, {
+      .get(`${baseUrl}admin/all-funding`, {
         headers: { token: token },
       })
       .then((data) => {
-        if (data.status === 200) {
-          console.log(data);
+        console.log(data);
 
-          setAllDeposits(data.data.deposits);
+        if (data.status === 200) {
+          setAllDeposits(data.data);
           setDLoading(false);
         }
       })
@@ -38,20 +40,52 @@ const AppProvider = ({ children }) => {
         setDLoading(false);
       });
   };
-  const getAllWithdrawals = (token) => {
-    setWidthDrawalsLoading(true);
+  const getAllFundingRequest = (token) => {
     axios
-      .get(`${baseUrl}transfer`, {
+      .get(`${baseUrl}admin/funding-requests`, {
         headers: { token: token },
       })
       .then((data) => {
-        if (data.status === 200) {
-          setWidthDrawals(data.data.transfers);
+        console.log(data);
+        setFundingRequests(data.data.requests);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const getAllWithdrawals = (token) => {
+    setWidthDrawalsLoading(true);
+    axios
+      .get(`${baseUrl}withdraw`, {
+        headers: { token: token },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setWidthDrawals(response.data.withdrawals);
           setWidthDrawalsLoading(false);
         }
       })
       .catch((error) => {
-        setWidthDrawalsLoading(false);
+        console.log(error);
+
+        // setWidthDrawalsLoading(false);
+      });
+  };
+
+  const getUserKYC = (adminToken, id) => {
+    axios
+      .get(`${baseUrl}kyc/${id}`, {
+        headers: { token: adminToken },
+      })
+      .then((data) => {
+        console.log(data);
+
+        if (data.status === 200) {
+          setUserKYC(data.data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 
@@ -63,8 +97,6 @@ const AppProvider = ({ children }) => {
         headers: { token: token },
       })
       .then((data) => {
-        console.log(data);
-
         if (data.status === 200) {
           setSLoading(false);
           setAllUsers(data.data);
@@ -83,8 +115,6 @@ const AppProvider = ({ children }) => {
         headers: { token: adminToken },
       })
       .then((data) => {
-        console.log(data);
-
         if (data.status === 200) {
           setUserDetails(data.data);
           setUserLoading(false);
@@ -111,6 +141,10 @@ const AppProvider = ({ children }) => {
         getAllWithdrawals,
         widthDrawals,
         widthDrawalsLoading,
+        getAllFundingRequest,
+        fundingRequests,
+        userKyc,
+        getUserKYC,
       }}
     >
       {children}

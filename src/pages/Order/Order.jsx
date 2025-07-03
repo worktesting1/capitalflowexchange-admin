@@ -24,16 +24,16 @@ const Order = () => {
   }, []);
 
   const successfulDeposits = allDeposits.filter(
-    (item) => item.status === "true"
+    (item) => item.status === "approved"
   );
   const failedDeposits = allDeposits.filter(
-    (item) => item.status === "Pending"
+    (item) => item.status === "pending"
   );
   const successWithdrawals = widthDrawals.filter(
-    (item) => item.status === true
+    (item) => item.status === "approved"
   );
   const pendingWithdrawals = widthDrawals.filter(
-    (item) => item.status === false
+    (item) => item.status === "pending"
   );
 
   return (

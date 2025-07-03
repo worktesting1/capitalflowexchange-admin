@@ -5,6 +5,9 @@ import Delete from "../../asset/delete.svg";
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment/moment";
 import { ColorRing } from "react-loader-spinner";
+import { useGlobalContext } from "../../context/context";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const TableBody = ({
   path,
@@ -17,7 +20,34 @@ const TableBody = ({
   toggleWithdrawalStatus,
 }) => {
   const [status, setStatus] = useState(true);
+  const [kycLoader, setKycLoader] = useState(false);
+  const { baseUrl, getUserKYC, userKyc } = useGlobalContext();
+  const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
 
+  const updateKYC = (id, userId, email) => {
+    if (!userKyc?.status) {
+      setKycLoader(true);
+      axios
+        .put(
+          `${baseUrl}kyc/${id}`,
+          {
+            status: true,
+            email: email,
+          },
+          { headers: { token: adminToken } }
+        )
+        .then((data) => {
+          if (data.status === 200) {
+            setKycLoader(false);
+            getUserKYC(adminToken, userId);
+            toast.success("User KYC Status Updated");
+          }
+        })
+        .catch((error) => {
+          setKycLoader(false);
+        });
+    }
+  };
   const navigate = useNavigate();
   return (
     <>
@@ -315,12 +345,13 @@ const TableBody = ({
                     updatedAt,
                     createdAt,
                     amount,
-                    transactiontype,
+                    transactionType,
                     image,
                     status,
                     _id,
                     userId,
                     referenceNumber,
+                    currency,
                   } = item;
                   return (
                     <div key={index} className="table_body_body">
@@ -328,12 +359,11 @@ const TableBody = ({
                         <p className="food_item_paragraphs">{index + 1}</p>
                       </div>
                       <div className={`table_body_header_item_2`}>
-                        <p className="paginators_numbers">{transactiontype}</p>
+                        <p className="paginators_numbers">{transactionType}</p>
                       </div>
                       <div className={`table_body_header_item_3`}>
                         <p className="food_item_paragraphs">
-                          {symbol}
-                          {amount}
+                          {amount} {currency}
                         </p>
                       </div>
                       <div className={`table_body_header_item_4`}>
@@ -345,7 +375,7 @@ const TableBody = ({
                         {!image ? (
                           <p className="food_item_paragraphs">Image Deleted</p>
                         ) : (
-                          <img src={image[0]?.url} className="proof" alt="" />
+                          <img src={image[0]} className="proof" alt="" />
                         )}
                       </div>
                       <div className={`table_body_header_item_6`}>
@@ -361,21 +391,21 @@ const TableBody = ({
                       <div className={`table_body_header_item_8`}>
                         <Button
                           background={
-                            status === "true"
+                            status === "approved"
                               ? "#EDFFF9"
-                              : status === "false" || status === "pending"
+                              : status === "pending"
                               ? "#FFF3E7"
                               : ""
                           }
                           title={
                             status === "pending"
                               ? "Pending"
-                              : status === "false"
+                              : status === "rejected"
                               ? "Failed"
                               : "Successful"
                           }
                           color={
-                            status === "true"
+                            status === "approved"
                               ? "var(--secondary-color)"
                               : "var(--color1)"
                           }
@@ -471,8 +501,8 @@ const TableBody = ({
         </div>
       ) : (
         <section className="table_body">
-          <div className="table_body_header">
-            {["S/n", "Name", "Wallet Address", "updated at", "action"].map(
+          <div className="table_body_header kyc_table_body_header">
+            {["Name", "Number", "Id Front", "Id Back", "action"].map(
               (item, index) => (
                 <div
                   key={index}
@@ -497,35 +527,48 @@ const TableBody = ({
                 />
               </div>
             ) : (
-              tableData &&
-              tableData.map((item, index) => {
-                const { walletName, address, _id, updatedAt } = item;
-                return (
-                  <div key={index} className="table_body_body">
-                    <div className={`table_body_header_item_1`}>
-                      <p className="food_item_paragraphs">{index + 1}</p>
-                    </div>
-                    <div className={`table_body_header_item_2`}>
-                      <p className="paginators_numbers">{walletName}</p>
-                    </div>
-                    <div className={`table_body_header_item_3`}>
-                      <p className="food_item_paragraphs">{address}</p>
-                    </div>
-                    <div className={`table_body_header_item_4`}>
-                      <p className="food_item_paragraphs">
-                        {moment(updatedAt).format("MMMM Do YYYY, h:mm")}
-                      </p>
-                    </div>
-                    <div className={`table_body_header_item_5`}>
-                      <Link to={`/${path}/${_id}`}>
-                        <button className="update_wallet_btn btn">
-                          Update Wallet
-                        </button>
-                      </Link>
-                    </div>
+              tableData && (
+                <div className="table_body_body kyc_table_body_body">
+                  <div className={`table_body_header_item_1`}>
+                    <p className="food_item_paragraphs">{tableData?.idname}</p>
                   </div>
-                );
-              })
+                  <div className={`table_body_header_item_2`}>
+                    <p className="paginators_numbers">{tableData?.idnumber}</p>
+                  </div>
+                  <div className={`table_body_header_item_3`}>
+                    <img
+                      src={tableData?.front && tableData?.front[0]?.url}
+                      className="proof"
+                      alt=""
+                    />
+                  </div>
+                  <div className={`table_body_header_item_4`}>
+                    <img
+                      src={tableData?.back && tableData?.back[0]?.url}
+                      className="proof"
+                      alt=""
+                    />
+                  </div>
+                  <div className={`table_body_header_item_5`}>
+                    <button
+                      onClick={() =>
+                        updateKYC(
+                          tableData._id,
+                          tableData.userId,
+                          tableData.email
+                        )
+                      }
+                      className="update_wallet_btn btn"
+                    >
+                      {kycLoader
+                        ? "loading..."
+                        : !tableData.status
+                        ? "Unapproved"
+                        : "Approved"}
+                    </button>
+                  </div>
+                </div>
+              )
             )}
           </>
         </section>
