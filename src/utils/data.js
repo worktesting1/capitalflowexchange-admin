@@ -6,7 +6,7 @@ import delivery from "../asset/security-user copy.svg";
 import settings from "../asset/setting.svg";
 import contact from "../asset/contact.svg";
 import about from "../asset/about.svg";
-// import Wallet from "../asset/wallet.svg";
+import Wallet from "../asset/wallet.svg";
 import { MdOutlinePrivacyTip } from "react-icons/md";
 import { RiTerminalWindowFill } from "react-icons/ri";
 
@@ -34,11 +34,11 @@ export const navItems = [
         name: "Deposits",
         path: "all-deposits",
       },
-      // {
-      //   img: Wallet,
-      //   name: "wallet address",
-      //   path: "wallet-address",
-      // },
+      {
+        img: Wallet,
+        name: "Investors",
+        path: "investors",
+      },
       {
         img: imageFive,
         name: "withdrawals",

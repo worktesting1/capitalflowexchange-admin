@@ -6,7 +6,7 @@ import axios from "axios";
 import { useGlobalContext } from "../../context/context";
 
 const WalletAddress = () => {
-  const [addresses, setAddresses] = useState();
+  const [investors, setInvestors] = useState([]);
   const [loading, setLoading] = useState(false);
   const { baseUrl } = useGlobalContext();
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
@@ -14,12 +14,12 @@ const WalletAddress = () => {
   const getAllWalletAddresses = () => {
     setLoading(true);
     axios
-      .get(`${baseUrl}/admin-wallets`, {
-        headers: { Authorization: `Bearer ${adminToken}` },
+      .get(`${baseUrl}copy-trade/investors/6865641ea4ec5f2c5f0d7872`, {
+        headers: { token: adminToken },
       })
       .then((data) => {
         if (data.status === 200) {
-          setAddresses(data.data);
+          setInvestors(data.data);
           setLoading(false);
         }
       })
@@ -35,12 +35,12 @@ const WalletAddress = () => {
   return (
     <section className="wallet_address">
       <DashHead
-        title={"Wallet Addresses "}
+        title={"All Investors Copying Trade"}
         paragraph={"See all wallet addresses Here"}
       />
       <div className="food_item_table">
         <div className="food_item_table_header">
-          <h4>All Wallet Address</h4>
+          <h4>All Investors</h4>
           <div>
             <p className="paginators_numbers">1-10</p>
             <p className="paginators_length">of 20</p>
@@ -63,11 +63,25 @@ const WalletAddress = () => {
             />
           </div>
         </div>
-        <TableBody
-          path={"update-wallet-address"}
-          tableData={addresses}
-          loading={loading}
-        />
+        <div className="investor-list">
+          <h2>Investors Copying You</h2>
+          {investors.length === 0 ? (
+            <p>No investors are copying you yet.</p>
+          ) : (
+            <ul>
+              {investors.map((inv) => (
+                <li key={inv._id}>
+                  <span className="inv-id">Name:</span> {inv.name} <br />
+                  <span className="inv-amount">Invested:</span> $
+                  {inv.investedAmount.toFixed(2)} <br />
+                  <span className="inv-profit">Email:</span> {inv.email}
+                  {/* <span className="inv-profit">Total Profit:</span> $
+                  {inv.totalProfit.toFixed(2)} */}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </section>
   );

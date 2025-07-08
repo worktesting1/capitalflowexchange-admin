@@ -52,7 +52,7 @@ const Deposits = () => {
             </div>
           ) : (
             widthDrawals.map((item, index) => {
-              const { createdAt, transactiontype, status, amount, updatedAt } =
+              const { createdAt, transferType, status, amount, updatedAt } =
                 item;
 
               let date = moment(createdAt).format("MMMM Do YYYY, h:mm:ss a");
@@ -62,7 +62,7 @@ const Deposits = () => {
                     <p>{date}</p>
                   </div>
                   <div className="type">
-                    <p>{transactiontype}</p>
+                    <p>{transferType}</p>
                   </div>
                   <div className="amount">
                     <p>
@@ -72,11 +72,27 @@ const Deposits = () => {
                   </div>
                   <div className="status">
                     <Button
-                      title={status ? "Approved" : "Pending"}
+                      title={
+                        status === "approved"
+                          ? "Approved"
+                          : status === "reject"
+                          ? "Failed"
+                          : "Pending"
+                      }
                       width={100}
                       height={30}
-                      background={!status ? "#FFF3E7" : "#EDFFF9"}
-                      color={!status ? "#999DA1" : "27AE61"}
+                      background={
+                        status === "reject"
+                          ? "#FFF3E7"
+                          : status === "approve"
+                          ? "#EDFFF9"
+                          : "#FFF3E7"
+                      }
+                      color={
+                        status === "reject" || status === "pending"
+                          ? "#999DA1"
+                          : "27AE61"
+                      }
                     />
                   </div>
                   <div className="reference">

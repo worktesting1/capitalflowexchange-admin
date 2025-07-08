@@ -482,10 +482,25 @@ const TableBody = ({
                   </div>
                   <div className={`table_body_header_item_8`}>
                     <Button
-                      background={status ? "#EDFFF9" : "#FFF3E7"}
-                      title={status ? "Active" : "Inactive"}
+                      background={
+                        transfer.status === "approved"
+                          ? "#EDFFF9"
+                          : transfer.status === "reject"
+                          ? "#FFF3E7"
+                          : ""
+                      }
+                      title={
+                        transfer.status === "approved"
+                          ? "Approved"
+                          : transfer.status === "pending"
+                          ? "Active"
+                          : "Reject"
+                      }
                       color={
-                        status ? "var(--secondary-color)" : "var(--other-color)"
+                        transfer.status === "pending" ||
+                        transfer.status === "approved"
+                          ? "var(--secondary-color)"
+                          : "var(--other-color)"
                       }
                       width={83}
                       height={30}

@@ -12,12 +12,16 @@ const CreateFoodItems = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { baseUrl, getUserDetails, userDetails } = useGlobalContext();
-  const { accessDeposit, symbol, country } = userDetails;
+  const { accessDeposit } = userDetails;
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
   const [wLoading, setWLoading] = useState(false);
-  const [symbolLoading, setSymbolLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [profit, setprofit] = useState(false);
+  const [signal, setSignal] = useState(userDetails.drift);
+  const [signalLoader, setSignalLoader] = useState(false);
+  const [tradeFavourRate, settradeFavourRate] = useState(
+    userDetails.tradeFavourRate
+  );
+  const [favourRateLoader, setfavourRateLoader] = useState(false);
   const [firstFormat, setfirstFormat] = useState("");
   const [forthCode, setForthCode] = useState("");
   const [forthMessage, setForthMessage] = useState("");
@@ -33,7 +37,6 @@ const CreateFoodItems = () => {
   const [thirdCode, setthirdCode] = useState("");
   const [headerText, setheaderText] = useState("");
   const [firstFormatLoader, setFirstFormatLoader] = useState(false);
-  const [loadingInvestStatus, setLoadingInvestStatus] = useState(false);
   const [activateDepositLoading, setactiveDLoading] = useState(false);
   const [headerTextLoader, setheaderTextLoader] = useState(false);
   const notify = () => toast.success("User Details Updated");
@@ -42,17 +45,17 @@ const CreateFoodItems = () => {
     navigate(`/user-details/${id}`);
   };
 
-  const handleProfit = () => {
+  const makeUserATrader = () => {
     setLoading(true);
     axios
       .put(
         `${baseUrl}users/updatedata/${id}`,
-        { profit: profit },
+        { isTrader: true },
         { headers: { token: adminToken } }
       )
       .then((data) => {
         setLoading(false);
-        notify();
+        toast.success("User is now a trader");
         setTimeout(() => {
           navigateBack();
         }, 2000);
@@ -62,6 +65,44 @@ const CreateFoodItems = () => {
       });
   };
 
+  const handleFavourRate = () => {
+    setfavourRateLoader(true);
+    axios
+      .put(
+        `${baseUrl}users/updatedata/${id}`,
+        { tradeFavourRate },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        setfavourRateLoader(false);
+        toast.success("Trade Favour Rate Updated");
+        setTimeout(() => {
+          navigateBack();
+        }, 2000);
+      })
+      .catch((error) => {
+        setfavourRateLoader(false);
+      });
+  };
+  const handleSignal = () => {
+    setSignalLoader(true);
+    axios
+      .put(
+        `${baseUrl}users/updatedata/${id}`,
+        { drift: signal },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        setSignalLoader(false);
+        toast.success("Trade Signal Updated");
+        setTimeout(() => {
+          navigateBack();
+        }, 2000);
+      })
+      .catch((error) => {
+        setSignalLoader(false);
+      });
+  };
   const handleSecondBilling = () => {
     setSecondLoader(true);
     axios
@@ -270,66 +311,6 @@ const CreateFoodItems = () => {
       });
   };
 
-  const getSymbol = symbol == "" ? "$" : symbol === "$" ? country.symbol : "";
-
-  const handleSymbol = () => {
-    setSymbolLoading(true);
-    axios
-      .put(
-        `${baseUrl}users/updatedata/${id}`,
-        {
-          symbol: getSymbol,
-        },
-        { headers: { token: adminToken } }
-      )
-      .then((data) => {
-        if (data.status === 200) {
-          if (symbol !== "$") {
-            toast.success("You Can Pay in Dollar");
-          } else {
-            toast.success("You Can Pay in their currency");
-          }
-          setSymbolLoading(false);
-          setTimeout(() => {
-            navigate("/user-details/" + userDetails._id);
-          }, 2000);
-        }
-      })
-      .catch((error) => {
-        setSymbolLoading(false);
-      });
-  };
-
-  const handleStartTrade = () => {
-    setLoadingInvestStatus(true);
-
-    axios
-      .put(
-        `${baseUrl}users/updatedata/${id}`,
-        {
-          startTrade: userDetails.startTrade === "true" ? "false" : "true",
-          email: userDetails.email,
-          name: `${userDetails.firstName} ${userDetails.lastName}`,
-        },
-        { headers: { token: adminToken } }
-      )
-      .then((data) => {
-        setLoadingInvestStatus(false);
-        if (userDetails.startTrade === "false") {
-          toast.success("Trade Start");
-        } else {
-          toast.success("Trade Ended");
-        }
-        getUserDetails(id);
-        setTimeout(() => {
-          navigateBack();
-        }, 2000);
-      })
-      .catch((error) => {
-        setLoadingInvestStatus(false);
-      });
-  };
-
   useEffect(() => {
     getUserDetails(id);
   }, []);
@@ -342,39 +323,6 @@ const CreateFoodItems = () => {
         title={"Update User Details"}
       />
       <div className="add_food_item_form">
-        <div className="add_food_item_form_item_three">
-          <p className="add_food_item_form_labels">Profit</p>
-          <input
-            type="text"
-            name="profit"
-            className="food_item_inputs"
-            placeholder="Profit"
-            onChange={(e) => setprofit(e.target.value)}
-            defaultValue={userDetails.profit}
-          />
-        </div>
-        <Button
-          icon={
-            loading && (
-              <ColorRing
-                visible={true}
-                height="40"
-                width="40"
-                ariaLabel="blocks-loading"
-                wrapperStyle={{}}
-                wrapperClass="blocks-wrapper"
-                colors={["#fff", "#fff", "#fff", "#fff", "#fff"]}
-              />
-            )
-          }
-          title={"Update Profit"}
-          background={"var(--secondary-color)"}
-          color={"#FFF"}
-          width={"43%"}
-          height={45}
-          navigate={handleProfit}
-        />
-
         <div className="add_food_item_form_item_four">
           <p className="add_food_item_form_labels">Second Code</p>
           <input
@@ -405,6 +353,68 @@ const CreateFoodItems = () => {
           width={"43%"}
           height={45}
           navigate={handleSecondBilling}
+        />
+        <div className="add_food_item_form_item_four">
+          <p className="add_food_item_form_labels">Signal</p>
+          <input
+            type="text"
+            className="food_item_inputs"
+            placeholder="Update First Code"
+            onChange={(e) => setSignal(e.target.value)}
+            defaultValue={userDetails.drift}
+          />
+        </div>
+        <Button
+          icon={
+            signalLoader && (
+              <ColorRing
+                visible={true}
+                height="40"
+                width="40"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["#fff", "#fff", "#fff", "#fff", "#fff"]}
+              />
+            )
+          }
+          title={"Update Signal"}
+          background={"var(--secondary-color)"}
+          color={"#FFF"}
+          width={"43%"}
+          height={45}
+          navigate={handleSignal}
+        />
+        <div className="add_food_item_form_item_four">
+          <p className="add_food_item_form_labels">Trade Favour Rate</p>
+          <input
+            type="text"
+            className="food_item_inputs"
+            placeholder="Update First Code"
+            onChange={(e) => settradeFavourRate(e.target.value)}
+            defaultValue={userDetails.tradeFavourRate}
+          />
+        </div>
+        <Button
+          icon={
+            favourRateLoader && (
+              <ColorRing
+                visible={true}
+                height="40"
+                width="40"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["#fff", "#fff", "#fff", "#fff", "#fff"]}
+              />
+            )
+          }
+          title={"Update Rate"}
+          background={"var(--secondary-color)"}
+          color={"#FFF"}
+          width={"43%"}
+          height={45}
+          navigate={handleFavourRate}
         />
         <div className="add_food_item_form_item_four">
           <p className="add_food_item_form_labels">Second Billing Format</p>
@@ -640,20 +650,10 @@ const CreateFoodItems = () => {
           }
           navigate={activateDeposit}
         />
-        <Button
-          color={"white"}
-          title={
-            symbolLoading
-              ? "Loading..."
-              : symbol === country?.symbol || symbol === ""
-              ? "Pay $"
-              : "Pay In Local Currency"
-          }
-          navigate={handleSymbol}
-        />
+
         <Button
           icon={
-            loadingInvestStatus && (
+            loading && (
               <ColorRing
                 visible={true}
                 height="40"
@@ -665,13 +665,11 @@ const CreateFoodItems = () => {
               />
             )
           }
-          title={
-            userDetails.startTrade === "false" ? "Start Trade" : "End Trade"
-          }
+          title={"Make User A Trader"}
           background={"var(--secondary-color)"}
           color={"#FFF"}
           height={45}
-          navigate={handleStartTrade}
+          navigate={makeUserATrader}
         />
       </div>
       <ToastContainer />

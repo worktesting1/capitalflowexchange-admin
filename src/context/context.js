@@ -4,8 +4,8 @@ import "react-toastify/dist/ReactToastify.css";
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-  const baseUrl = "http://localhost:5000/api/";
-  // const baseUrl = "https://capitalflowexchange-api.onrender.com/api/";
+  // const baseUrl = "http://localhost:5000/api/";
+  const baseUrl = "https://capitalflowexchange-api.onrender.com/api/";
 
   const [allDeposits, setAllDeposits] = useState([]);
   const [widthDrawals, setWidthDrawals] = useState([]);
@@ -27,16 +27,12 @@ const AppProvider = ({ children }) => {
         headers: { token: token },
       })
       .then((data) => {
-        console.log(data);
-
         if (data.status === 200) {
           setAllDeposits(data.data);
           setDLoading(false);
         }
       })
       .catch((error) => {
-        console.log(error);
-
         setDLoading(false);
       });
   };
@@ -46,12 +42,9 @@ const AppProvider = ({ children }) => {
         headers: { token: token },
       })
       .then((data) => {
-        console.log(data);
         setFundingRequests(data.data.requests);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   };
   const getAllWithdrawals = (token) => {
     setWidthDrawalsLoading(true);
@@ -66,8 +59,6 @@ const AppProvider = ({ children }) => {
         }
       })
       .catch((error) => {
-        console.log(error);
-
         // setWidthDrawalsLoading(false);
       });
   };
@@ -78,15 +69,11 @@ const AppProvider = ({ children }) => {
         headers: { token: adminToken },
       })
       .then((data) => {
-        console.log(data);
-
         if (data.status === 200) {
           setUserKYC(data.data);
         }
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   };
 
   // Get All Users

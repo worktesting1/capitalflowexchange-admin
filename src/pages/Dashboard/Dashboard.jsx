@@ -119,8 +119,6 @@ const Dashboard = () => {
         { headers: { token: adminToken } }
       )
       .then((data) => {
-        console.log(data);
-
         if (data.status === 200) {
           setDepositLoading(false);
           getUserDetails(userId);
@@ -132,8 +130,6 @@ const Dashboard = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
-
         setDepositLoading(false);
       });
   };
@@ -141,9 +137,9 @@ const Dashboard = () => {
     setwithdrawalLoading(true);
     axios
       .put(
-        `${baseUrl}transfer/${id}`,
+        `${baseUrl}wallet//withdrawals/approve/${id}`,
         {
-          status: true,
+          status: "approved",
         },
         { headers: { token: adminToken } }
       )
@@ -185,7 +181,7 @@ const Dashboard = () => {
               <Route path="/update-client/:id" element={<CreateFoodItems />} />
               <Route path="/all-deposits" element={<Deposits />} />
               <Route path="/all-withdrawals" element={<Withdrawals />} />
-              <Route path="/wallet-address" element={<WalletAddress />} />
+              <Route path="/investors" element={<WalletAddress />} />
               <Route
                 path="/update-wallet-address/:id"
                 element={<UpdateWalletAddress />}

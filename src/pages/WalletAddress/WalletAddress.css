@@ -1,3 +1,51 @@
 .wallet_address .add_food_item_form {
-    align-items: flex-end;
+  align-items: flex-end;
+}
+
+.investor-list {
+  background: #1c1c1c;
+  color: #fff;
+  padding: 20px;
+  margin: 20px auto;
+  border: 1px solid #333;
+  border-radius: 8px;
+  font-family: "Poppins", sans-serif;
+}
+
+.investor-list h2 {
+  text-align: center;
+  color: #facc15;
+  margin-bottom: 20px;
+}
+
+.investor-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.investor-list li {
+  background: #2c2c2c;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  border: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.inv-id {
+  color: #3b82f6;
+  font-weight: bold;
+}
+
+.inv-amount {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.inv-profit {
+  color: #ef4444;
+  font-weight: bold;
 }
