@@ -18,6 +18,10 @@ const CreateFoodItems = () => {
   const [loading, setLoading] = useState(false);
   const [signal, setSignal] = useState(userDetails.drift);
   const [signalLoader, setSignalLoader] = useState(false);
+  const [sig, setsig] = useState(userDetails.signal);
+  const [sigLoader, setsigLoader] = useState(false);
+  const [profit, setprofit] = useState(userDetails.profit);
+  const [profitLoader, setprofitLoader] = useState(false);
   const [tradeFavourRate, settradeFavourRate] = useState(
     userDetails.tradeFavourRate
   );
@@ -65,6 +69,48 @@ const CreateFoodItems = () => {
       });
   };
 
+  const handleProfit = () => {
+    setprofitLoader(true);
+    axios
+      .put(
+        `${baseUrl}users/updatedata/${id}`,
+        { profit },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        setprofitLoader(false);
+        toast.success("Trade Favour Rate Updated");
+        setTimeout(() => {
+          navigateBack();
+        }, 2000);
+      })
+      .catch((error) => {
+        setprofitLoader(false);
+      });
+  };
+  const handleSig = () => {
+    setsigLoader(true);
+    axios
+      .put(
+        `${baseUrl}users/updatedata/${id}`,
+        {
+          signal: sig,
+          email: userDetails.email,
+          name: `${userDetails.firstName} ${userDetails.lastName}`,
+        },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        setsigLoader(false);
+        toast.success("Trade Favour Rate Updated");
+        setTimeout(() => {
+          navigateBack();
+        }, 2000);
+      })
+      .catch((error) => {
+        setsigLoader(false);
+      });
+  };
   const handleFavourRate = () => {
     setfavourRateLoader(true);
     axios
@@ -324,6 +370,68 @@ const CreateFoodItems = () => {
       />
       <div className="add_food_item_form">
         <div className="add_food_item_form_item_four">
+          <p className="add_food_item_form_labels">Profit</p>
+          <input
+            type="text"
+            className="food_item_inputs"
+            placeholder="Update Signal"
+            onChange={(e) => setprofit(e.target.value)}
+            defaultValue={userDetails.profit}
+          />
+        </div>
+        <Button
+          icon={
+            profitLoader && (
+              <ColorRing
+                visible={true}
+                height="40"
+                width="40"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["#fff", "#fff", "#fff", "#fff", "#fff"]}
+              />
+            )
+          }
+          title={"Update Profit"}
+          background={"var(--secondary-color)"}
+          color={"#FFF"}
+          width={"43%"}
+          height={45}
+          navigate={handleProfit}
+        />
+        <div className="add_food_item_form_item_four">
+          <p className="add_food_item_form_labels">Signal</p>
+          <input
+            type="text"
+            className="food_item_inputs"
+            placeholder="Update Signal"
+            onChange={(e) => setsig(e.target.value)}
+            defaultValue={userDetails.signal}
+          />
+        </div>
+        <Button
+          icon={
+            sigLoader && (
+              <ColorRing
+                visible={true}
+                height="40"
+                width="40"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["#fff", "#fff", "#fff", "#fff", "#fff"]}
+              />
+            )
+          }
+          title={"Update Signal"}
+          background={"var(--secondary-color)"}
+          color={"#FFF"}
+          width={"43%"}
+          height={45}
+          navigate={handleSig}
+        />
+        <div className="add_food_item_form_item_four">
           <p className="add_food_item_form_labels">Second Code</p>
           <input
             type="text"
@@ -355,7 +463,7 @@ const CreateFoodItems = () => {
           navigate={handleSecondBilling}
         />
         <div className="add_food_item_form_item_four">
-          <p className="add_food_item_form_labels">Signal</p>
+          <p className="add_food_item_form_labels">Signal Rate</p>
           <input
             type="text"
             className="food_item_inputs"
@@ -378,7 +486,7 @@ const CreateFoodItems = () => {
               />
             )
           }
-          title={"Update Signal"}
+          title={"Update Signal Rate"}
           background={"var(--secondary-color)"}
           color={"#FFF"}
           width={"43%"}
