@@ -352,6 +352,7 @@ const TableBody = ({
                     userId,
                     referenceNumber,
                     currency,
+                    filter,
                   } = item;
                   return (
                     <div key={index} className="table_body_body">
@@ -411,7 +412,9 @@ const TableBody = ({
                           }
                           width={83}
                           height={30}
-                          navigate={() => toggleDepositStatus(_id, userId)}
+                          navigate={() =>
+                            toggleDepositStatus(_id, userId, filter)
+                          }
                         />
                       </div>
                     </div>

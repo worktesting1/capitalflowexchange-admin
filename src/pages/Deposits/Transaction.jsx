@@ -9,32 +9,40 @@ import axios from "axios";
 
 const Deposits = () => {
   const [loading, setLoading] = useState(false);
-  const { allDeposits, getAllDeposits, dLoading, userDetails, baseUrl } =
-    useGlobalContext();
+  const {
+    allDeposits,
+    getAllDeposits,
+    dLoading,
+    userDetails,
+    baseUrl,
+    getAllAssetDeposits,
+    allAssetDeposits,
+  } = useGlobalContext();
   const { country } = userDetails;
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
 
   const symbol = country?.symbol;
 
-  const deleteDeposit = (id) => {
-    setLoading(true);
-    axios
-      .post(
-        `${baseUrl}deposit/delete/${id}`,
-        {},
-        { headers: { token: adminToken } }
-      )
-      .then((response) => {
-        setLoading(false);
-        getAllDeposits(adminToken);
-      })
-      .catch((err) => {
-        setLoading(false);
-      });
-  };
+  // const deleteDeposit = (id, path) => {
+  //   setLoading(true);
+  //   axios
+  //     .post(
+  //       `${baseUrl}deposit/delete/${id}`,
+  //       {},
+  //       { headers: { token: adminToken } }
+  //     )
+  //     .then((response) => {
+  //       setLoading(false);
+  //       getAllDeposits(adminToken);
+  //     })
+  //     .catch((err) => {
+  //       setLoading(false);
+  //     });
+  // };
 
   useEffect(() => {
     getAllDeposits(adminToken);
+    getAllAssetDeposits(adminToken);
   }, []);
   return (
     <section>
@@ -57,9 +65,9 @@ const Deposits = () => {
             <div className="reference">
               <h3>Update Date</h3>
             </div>
-            <div className="delete_deposit">
+            {/* <div className="delete_deposit">
               <h3>Delete Deposit</h3>
-            </div>
+            </div> */}
           </div>
           {dLoading || loading ? (
             <div className="list_loader">
@@ -74,7 +82,7 @@ const Deposits = () => {
               />
             </div>
           ) : (
-            allDeposits.map((item, index) => {
+            [...allDeposits, ...allAssetDeposits].map((item, index) => {
               const {
                 createdAt,
                 transactiontype,
@@ -125,13 +133,13 @@ const Deposits = () => {
                   <div className="reference">
                     <p>{moment(updatedAt).format("MMMM Do YYYY, h:mm:ss a")}</p>
                   </div>
-                  <div className="delete_deposit">
+                  {/* <div className="delete_deposit">
                     <img
                       onClick={() => deleteDeposit(_id)}
                       src={Delete}
                       alt=""
                     />
-                  </div>
+                  </div> */}
                 </div>
               );
             })

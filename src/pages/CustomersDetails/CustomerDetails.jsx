@@ -29,6 +29,8 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
     fundingRequests,
     userKyc,
     getUserKYC,
+    getAllAssetFundingRequest,
+    assetfundingRequests,
   } = useGlobalContext();
   const {
     profit,
@@ -94,6 +96,7 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
     getAllDeposits(adminToken);
     getAllWithdrawals(adminToken);
     getAllFundingRequest(adminToken);
+    getAllAssetFundingRequest(adminToken);
     getUserKYC(adminToken, id);
   }, []);
 
@@ -438,7 +441,7 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
           }
           tableData={
             details === "customers_favorite_details"
-              ? fundingRequests
+              ? [...fundingRequests, ...assetfundingRequests]
               : details === "kyc_details"
               ? userKyc[0]
               : userWithdrawals

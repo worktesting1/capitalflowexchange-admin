@@ -36,6 +36,7 @@ const Dashboard = () => {
   const [visibility, setVisibility] = useState(false);
   const navigate = useNavigate();
   const [deleteLoading, setDeleteLoader] = useState(false);
+  const [depositPath, setDepositPath] = useState("");
   const { baseUrl, getAllUsers, getUserDetails } = useGlobalContext();
 
   const toggleVisibility = () => setVisibility(!visibility);
@@ -72,9 +73,10 @@ const Dashboard = () => {
     setNotification(!notification);
   };
 
-  const toggleDepositStatus = (id, userID) => {
+  const toggleDepositStatus = (id, userID, filter) => {
     setDepositId(id);
     setUserId(userID);
+    setDepositPath(filter);
     setUpdateStatus(!updateStatus);
   };
   const toggleWithdrawalStatus = (id, userID) => {
@@ -87,7 +89,9 @@ const Dashboard = () => {
     setFailedLoading(true);
     axios
       .put(
-        `${baseUrl}admin/approve-funding/${id}`,
+        `${baseUrl}${
+          depositPath === "asset" ? "asset-admin" : "admin"
+        }/approve-funding/${id}`,
         {
           status: "reject",
         },
@@ -114,7 +118,9 @@ const Dashboard = () => {
     setDepositLoading(true);
     axios
       .put(
-        `${baseUrl}admin/approve-funding/${requestId}`,
+        `${baseUrl}${
+          depositPath === "asset" ? "asset-admin" : "admin"
+        }/approve-funding/${requestId}`,
         { status: "approved" },
         { headers: { token: adminToken } }
       )
@@ -137,7 +143,7 @@ const Dashboard = () => {
     setwithdrawalLoading(true);
     axios
       .put(
-        `${baseUrl}wallet//withdrawals/approve/${id}`,
+        `${baseUrl}wallet/withdrawals/approve/${id}`,
         {
           status: "approved",
         },

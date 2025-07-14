@@ -8,6 +8,7 @@ const AppProvider = ({ children }) => {
   const baseUrl = "https://capitalflowexchange-api.onrender.com/api/";
 
   const [allDeposits, setAllDeposits] = useState([]);
+  const [allAssetDeposits, setAllAssetDeposits] = useState([]);
   const [widthDrawals, setWidthDrawals] = useState([]);
   const [widthDrawalsLoading, setWidthDrawalsLoading] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
@@ -16,6 +17,7 @@ const AppProvider = ({ children }) => {
   const [usersLoading, setSLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
   const [fundingRequests, setFundingRequests] = useState([]);
+  const [assetfundingRequests, setassetFundingRequests] = useState([]);
   const [userKyc, setUserKYC] = useState([]);
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
 
@@ -36,6 +38,22 @@ const AppProvider = ({ children }) => {
         setDLoading(false);
       });
   };
+  const getAllAssetDeposits = (token) => {
+    setDLoading(true);
+    axios
+      .get(`${baseUrl}asset-admin/all-funding`, {
+        headers: { token: token },
+      })
+      .then((data) => {
+        if (data.status === 200) {
+          setAllAssetDeposits(data.data);
+          setDLoading(false);
+        }
+      })
+      .catch((error) => {
+        setDLoading(false);
+      });
+  };
   const getAllFundingRequest = (token) => {
     axios
       .get(`${baseUrl}admin/funding-requests`, {
@@ -43,6 +61,16 @@ const AppProvider = ({ children }) => {
       })
       .then((data) => {
         setFundingRequests(data.data.requests);
+      })
+      .catch((error) => {});
+  };
+  const getAllAssetFundingRequest = (token) => {
+    axios
+      .get(`${baseUrl}asset-admin/funding-requests`, {
+        headers: { token: token },
+      })
+      .then((data) => {
+        setassetFundingRequests(data.data.requests);
       })
       .catch((error) => {});
   };
@@ -132,6 +160,10 @@ const AppProvider = ({ children }) => {
         fundingRequests,
         userKyc,
         getUserKYC,
+        getAllAssetFundingRequest,
+        assetfundingRequests,
+        getAllAssetDeposits,
+        allAssetDeposits,
       }}
     >
       {children}
