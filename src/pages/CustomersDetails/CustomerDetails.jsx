@@ -31,6 +31,8 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
     getUserKYC,
     getAllAssetFundingRequest,
     assetfundingRequests,
+    getUserPortfolio,
+    userPortfolio,
   } = useGlobalContext();
   const profit = JSON.parse(localStorage.getItem("profit"));
   const total = localStorage.getItem("totalBalance");
@@ -53,8 +55,6 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
 
   userDeposits = allDeposits.filter((deposit) => deposit.userId === id);
   userWithdrawals = widthDrawals.filter((transfer) => transfer.userId === id);
-
-  console.log(userDeposits);
 
   const getPendingDepositsAmount = () => {
     return userDeposits
@@ -89,6 +89,8 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
       setDetails("customers_favorite_details");
     } else if (e.target.id === "3") {
       setDetails("kyc_details");
+    } else if (e.target.id === "4") {
+      setDetails("asset_details");
     }
   };
 
@@ -100,7 +102,9 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
     getAllFundingRequest(adminToken);
     getAllAssetFundingRequest(adminToken);
     getUserKYC(adminToken, id);
+    getUserPortfolio(id, adminToken);
   }, []);
+  console.log();
 
   return (
     <section className="customer_details">
@@ -396,6 +400,22 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
           }
           navigate={toggleTable}
         />
+        <Button
+          id={4}
+          border={"1px #E6E6E6 solid"}
+          title={"Assets"}
+          height={35}
+          width={115}
+          borderRadius={30}
+          color={details === "asset_details" ? "white" : "var(--color5)"}
+          fontsize={14}
+          background={
+            details === "asset_details"
+              ? "var(--secondary-color)"
+              : "var(--color2)"
+          }
+          navigate={toggleTable}
+        />
       </div>
       <div className="food_item_table">
         <div className="food_item_table_header">
@@ -404,7 +424,9 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
               ? "All Withdrawals from client"
               : details === "customers_favorite_details"
               ? "All deposits from client"
-              : "All transactions from customer"}
+              : details === "kyc_details"
+              ? "KYC Details"
+              : "All User Assets"}
           </h4>
           <div>
             <p className="paginators_numbers">1-10</p>
@@ -438,12 +460,16 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
               : details === "customers_order_details"
               ? "customers_order_details"
               : details === "customers_transaction_details"
-              ? "customers_transaction_details"
-              : ""
+              ? "asset_details"
+              : details === "asset_details"
+              ? "asset_details"
+              : "customers_transaction_details"
           }
           tableData={
             details === "customers_favorite_details"
               ? [...fundingRequests, ...assetfundingRequests]
+              : details === "asset_details"
+              ? userPortfolio.assets
               : details === "kyc_details"
               ? userKyc[0]
               : userWithdrawals

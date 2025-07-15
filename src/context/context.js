@@ -19,6 +19,8 @@ const AppProvider = ({ children }) => {
   const [fundingRequests, setFundingRequests] = useState([]);
   const [assetfundingRequests, setassetFundingRequests] = useState([]);
   const [userKyc, setUserKYC] = useState([]);
+  const [userPortfolio, setUserPortfolio] = useState([]);
+
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
 
   // Get All Deposits
@@ -88,6 +90,19 @@ const AppProvider = ({ children }) => {
       })
       .catch((error) => {
         // setWidthDrawalsLoading(false);
+      });
+  };
+
+  const getUserPortfolio = (userId, token) => {
+    axios
+      .get(`${baseUrl}asset-trade/portfolio/${userId}`, {
+        headers: { token },
+      })
+      .then((response) => {
+        setUserPortfolio(response.data.portfolio);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 
@@ -164,6 +179,8 @@ const AppProvider = ({ children }) => {
         assetfundingRequests,
         getAllAssetDeposits,
         allAssetDeposits,
+        getUserPortfolio,
+        userPortfolio,
       }}
     >
       {children}

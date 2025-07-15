@@ -8,6 +8,7 @@ import { ColorRing } from "react-loader-spinner";
 import { useGlobalContext } from "../../context/context";
 import { toast } from "react-toastify";
 import axios from "axios";
+import QuantityModal from "./QuantityModal";
 
 const TableBody = ({
   path,
@@ -20,8 +21,39 @@ const TableBody = ({
   toggleWithdrawalStatus,
 }) => {
   const [status, setStatus] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [currentQuantity, setCurrentQuantity] = useState(null);
+  const [assetId, setAssetId] = useState("");
+  const [userId, setUserId] = useState("");
+  const [loader, setLoader] = useState(false);
+
+  const handleUpdateQuantity = (newQuantity) => {
+    setCurrentQuantity(newQuantity);
+    setLoader(true);
+    axios
+      .put(
+        `${baseUrl}asset-trade/${userId}/${assetId}`,
+        { quantity: Number(newQuantity) },
+        { headers: { token: adminToken } }
+      )
+      .then((response) => {
+        setLoader(false);
+        toast.success("Quantity Updated");
+        getUserPortfolio(userId, adminToken);
+
+        setTimeout(() => {
+          setShowModal(false);
+        }, 2000);
+      })
+      .catch((error) => {
+        setLoader(false);
+      });
+
+    // You might also want to update your backend here
+  };
+
   const [kycLoader, setKycLoader] = useState(false);
-  const { baseUrl, getUserKYC, userKyc } = useGlobalContext();
+  const { baseUrl, getUserKYC, userKyc, getUserPortfolio } = useGlobalContext();
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
 
   const updateKYC = (id, userId, email) => {
@@ -49,8 +81,17 @@ const TableBody = ({
     }
   };
   const navigate = useNavigate();
+
   return (
     <>
+      {showModal && (
+        <QuantityModal
+          initialQuantity={currentQuantity}
+          onSave={handleUpdateQuantity}
+          onClose={() => setShowModal(false)}
+          isLoading={loader}
+        />
+      )}
       {order === "Order" ? (
         <section className="table_body">
           <div className="table_body_header">
@@ -354,6 +395,8 @@ const TableBody = ({
                     currency,
                     filter,
                   } = item;
+                  console.log(status);
+
                   return (
                     <div key={index} className="table_body_body">
                       <div className={`table_body_header_item_1`}>
@@ -401,7 +444,7 @@ const TableBody = ({
                           title={
                             status === "pending"
                               ? "Pending"
-                              : status === "rejected"
+                              : status === "reject"
                               ? "Failed"
                               : "Successful"
                           }
@@ -517,6 +560,81 @@ const TableBody = ({
             </>
           </section>
         </div>
+      ) : order === "asset_details" ? (
+        <section className="table_body">
+          <div className="table_body_header kyc_table_body_header">
+            {[
+              "Sn",
+              "Asset Id",
+              "Purchase Price",
+              "Total Amount",
+              "Quantity",
+              "action",
+            ].map((item, index) => (
+              <div
+                key={index}
+                className={`table_body_header_item_${1 + index}`}
+              >
+                <p className="table_body_header_text">{item}</p>
+              </div>
+            ))}
+          </div>
+          <>
+            {loading ? (
+              <div className="list_loader">
+                <ColorRing
+                  visible={true}
+                  height="60"
+                  width="60"
+                  ariaLabel="blocks-loading"
+                  wrapperStyle={{}}
+                  wrapperClass="blocks-wrapper"
+                  colors={["black", "black", "black", "black", "black"]}
+                />
+              </div>
+            ) : (
+              tableData.map((transfer, index) => (
+                <div key={index} className="table_body_body">
+                  <div className={`table_body_header_item_1`}>
+                    <p className="food_item_paragraphs">{index + 1}</p>
+                  </div>
+                  <div className={`table_body_header_item_2`}>
+                    <p className="paginators_numbers">{transfer?.assetId}</p>
+                  </div>
+                  <div className={`table_body_header_item_3`}>
+                    <p className="food_item_paragraphs">
+                      ${transfer.avgPurchasePrice}
+                    </p>
+                  </div>
+                  <div className={`table_body_header_item_4`}>
+                    <p className="food_item_paragraphs">
+                      ${transfer.currentValue}
+                    </p>
+                  </div>
+                  <div className={`table_body_header_item_5`}>
+                    <p className="food_item_paragraphs">{transfer?.quantity}</p>
+                  </div>
+
+                  <div className={`table_body_header_item_8`}>
+                    <Button
+                      background={"#EDFFF9"}
+                      title={"Update"}
+                      color={"var(--secondary-color)"}
+                      width={83}
+                      height={30}
+                      navigate={() => {
+                        setShowModal(true);
+                        setUserId(transfer.userId);
+                        setAssetId(transfer.assetId);
+                        setCurrentQuantity(transfer.quantity);
+                      }}
+                    />
+                  </div>
+                </div>
+              ))
+            )}
+          </>
+        </section>
       ) : (
         <section className="table_body">
           <div className="table_body_header kyc_table_body_header">
