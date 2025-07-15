@@ -32,9 +32,9 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
     getAllAssetFundingRequest,
     assetfundingRequests,
   } = useGlobalContext();
+  const profit = JSON.parse(localStorage.getItem("profit"));
+  const total = localStorage.getItem("totalBalance");
   const {
-    profit,
-    bonus,
     firstName,
     lastName,
     country,
@@ -53,6 +53,8 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
 
   userDeposits = allDeposits.filter((deposit) => deposit.userId === id);
   userWithdrawals = widthDrawals.filter((transfer) => transfer.userId === id);
+
+  console.log(userDeposits);
 
   const getPendingDepositsAmount = () => {
     return userDeposits
@@ -172,7 +174,7 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
         </div>
         <div>
           <div>
-            <p className="dashboard_paragraph">Bonus</p>
+            <p className="dashboard_paragraph">Total Balance</p>
             <h3 className="dashboard_header_text">
               {userLoading ? (
                 <ColorRing
@@ -186,7 +188,7 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
                 />
               ) : (
                 ` ${symbol}
-              ${formatter.format(bonus)}`
+              ${formatter.format(total)}`
               )}
             </h3>
           </div>

@@ -20,8 +20,14 @@ const CreateFoodItems = () => {
   const [signalLoader, setSignalLoader] = useState(false);
   const [sig, setsig] = useState(userDetails.signal);
   const [sigLoader, setsigLoader] = useState(false);
-  const [profit, setprofit] = useState(userDetails.profit);
+  const [profit, setprofit] = useState(
+    JSON.parse(localStorage.getItem("profit"))
+  );
+  const [assetProfit, setAssetProfit] = useState(
+    JSON.parse(localStorage.getItem("assetProfit"))
+  );
   const [profitLoader, setprofitLoader] = useState(false);
+  const [assetProfitLoader, setAssetProfitLoader] = useState(false);
   const [tradeFavourRate, settradeFavourRate] = useState(
     userDetails.tradeFavourRate
   );
@@ -73,19 +79,47 @@ const CreateFoodItems = () => {
     setprofitLoader(true);
     axios
       .put(
-        `${baseUrl}users/updatedata/${id}`,
-        { profit },
+        `${baseUrl}wallet/update-balance`,
+        { amount: Number(profit), userId: id },
         { headers: { token: adminToken } }
       )
       .then((data) => {
+        console.log(data);
+        localStorage.setItem("rofit", JSON.stringify(profit));
+        localStorage.setItem("totalBalance", data.data.newBalance);
         setprofitLoader(false);
-        toast.success("Trade Favour Rate Updated");
+        toast.success("Profit Updated");
         setTimeout(() => {
           navigateBack();
         }, 2000);
       })
       .catch((error) => {
+        console.log(error);
+
         setprofitLoader(false);
+      });
+  };
+  const handleAssetProfit = () => {
+    setAssetProfitLoader(true);
+    axios
+      .put(
+        `${baseUrl}asset-wallet/update-balance`,
+        { amount: Number(assetProfit), userId: id },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        console.log(data);
+        localStorage.setItem("assetProfit", JSON.stringify(profit));
+        setAssetProfitLoader(false);
+        toast.success("Asset Profit Updated");
+        setTimeout(() => {
+          navigateBack();
+        }, 2000);
+      })
+      .catch((error) => {
+        console.log(error);
+
+        setAssetProfitLoader(false);
       });
   };
   const handleSig = () => {
@@ -374,9 +408,9 @@ const CreateFoodItems = () => {
           <input
             type="text"
             className="food_item_inputs"
-            placeholder="Update Signal"
+            placeholder="Update Profit"
             onChange={(e) => setprofit(e.target.value)}
-            defaultValue={userDetails.profit}
+            defaultValue={profit || 0}
           />
         </div>
         <Button
@@ -399,6 +433,37 @@ const CreateFoodItems = () => {
           width={"43%"}
           height={45}
           navigate={handleProfit}
+        />
+        <div className="add_food_item_form_item_four">
+          <p className="add_food_item_form_labels">Asset Profit</p>
+          <input
+            type="text"
+            className="food_item_inputs"
+            placeholder="Update Profit"
+            onChange={(e) => setAssetProfit(e.target.value)}
+            defaultValue={assetProfit || 0}
+          />
+        </div>
+        <Button
+          icon={
+            assetProfitLoader && (
+              <ColorRing
+                visible={true}
+                height="40"
+                width="40"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["#fff", "#fff", "#fff", "#fff", "#fff"]}
+              />
+            )
+          }
+          title={"Update Profit"}
+          background={"var(--secondary-color)"}
+          color={"#FFF"}
+          width={"43%"}
+          height={45}
+          navigate={handleAssetProfit}
         />
         <div className="add_food_item_form_item_four">
           <p className="add_food_item_form_labels">Signal</p>
