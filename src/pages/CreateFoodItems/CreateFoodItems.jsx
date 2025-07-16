@@ -136,7 +136,7 @@ const CreateFoodItems = () => {
       )
       .then((data) => {
         setsigLoader(false);
-        toast.success("Trade Favour Rate Updated");
+        toast.success("Trade Signal Updated");
         setTimeout(() => {
           navigateBack();
         }, 2000);
@@ -174,7 +174,7 @@ const CreateFoodItems = () => {
       )
       .then((data) => {
         setSignalLoader(false);
-        toast.success("Trade Signal Updated");
+        toast.success("Trade Drift Updated");
         setTimeout(() => {
           navigateBack();
         }, 2000);
