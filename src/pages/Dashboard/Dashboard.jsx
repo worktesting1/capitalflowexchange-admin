@@ -234,6 +234,7 @@ const Dashboard = () => {
             updateDepositApproved={withdrawalApproved}
             id={depositId}
             depositLoading={withdrawalLoading}
+            userId={userId}
           />
         </div>
       </div>

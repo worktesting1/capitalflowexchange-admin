@@ -19,7 +19,7 @@ const Deposits = () => {
   return (
     <section>
       <div className="transaction_sect">
-        <h2>All Deposit History</h2>
+        <h2>All Withdrawal History</h2>
         <div className="transaction_table">
           <div className="transaction_table_head">
             <div className="date">
@@ -75,21 +75,21 @@ const Deposits = () => {
                       title={
                         status === "approved"
                           ? "Approved"
-                          : status === "reject"
+                          : status === "failed"
                           ? "Failed"
                           : "Pending"
                       }
                       width={100}
                       height={30}
                       background={
-                        status === "reject"
+                        status === "failed"
                           ? "#FFF3E7"
                           : status === "approve"
                           ? "#EDFFF9"
                           : "#FFF3E7"
                       }
                       color={
-                        status === "reject" || status === "pending"
+                        status === "failed" || status === "pending"
                           ? "#999DA1"
                           : "27AE61"
                       }

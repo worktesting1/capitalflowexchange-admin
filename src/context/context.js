@@ -1,5 +1,7 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const AppContext = React.createContext();
 
@@ -20,6 +22,7 @@ const AppProvider = ({ children }) => {
   const [assetfundingRequests, setassetFundingRequests] = useState([]);
   const [userKyc, setUserKYC] = useState([]);
   const [userPortfolio, setUserPortfolio] = useState([]);
+  const [wLoading, setWLoading] = useState(false);
 
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
 
@@ -90,6 +93,36 @@ const AppProvider = ({ children }) => {
       })
       .catch((error) => {
         // setWidthDrawalsLoading(false);
+      });
+  };
+  const navigate = useNavigate();
+
+  const withdrawalFailed = (id, userId) => {
+    setWLoading(true);
+    axios
+      .put(
+        `${baseUrl}wallet/withdrawals/approve/${id}`,
+        {
+          status: "failed",
+        },
+        { headers: { token: adminToken } }
+      )
+      .then((data) => {
+        if (data.status === 200) {
+          setWLoading(false);
+          getUserDetails(userId);
+          toast.success("Withdrawal Reject");
+          setTimeout(() => {
+            navigate("/all-withdrawals");
+          }, 2000);
+        }
+      })
+      .catch((error) => {
+        if (error.response.data.message === "Withdrawal already finalized") {
+          toast.error("Withdrawal already finalized");
+        }
+
+        setWLoading(false);
       });
   };
 
@@ -181,6 +214,8 @@ const AppProvider = ({ children }) => {
         allAssetDeposits,
         getUserPortfolio,
         userPortfolio,
+        withdrawalFailed,
+        wLoading,
       }}
     >
       {children}

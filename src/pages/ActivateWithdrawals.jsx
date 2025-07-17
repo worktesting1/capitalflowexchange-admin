@@ -2,6 +2,7 @@ import React from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { Button } from "../components";
 import { MdCheckCircle } from "react-icons/md";
+import { useGlobalContext } from "../context/context";
 
 const ActivateWithdrawals = ({
   toggleActivateDeposit,
@@ -11,7 +12,9 @@ const ActivateWithdrawals = ({
   id,
   depositLoading,
   failedLoading,
+  userId,
 }) => {
+  const { withdrawalFailed, wLoading } = useGlobalContext();
   return (
     <>
       {updateStatus && (
@@ -44,12 +47,12 @@ const ActivateWithdrawals = ({
 
               <Button
                 background={"var(--other-color)"}
-                title={failedLoading ? "loading..." : "Failed"}
+                title={wLoading ? "loading..." : "Failed"}
                 width={"50%"}
                 height={40}
                 fontsize={15}
                 color={"white"}
-                navigate={() => updateDepositFailed(id)}
+                navigate={() => withdrawalFailed(id, userId)}
               />
             </div>
           </div>
