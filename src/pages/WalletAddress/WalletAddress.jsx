@@ -14,10 +14,12 @@ const WalletAddress = () => {
   const getAllWalletAddresses = () => {
     setLoading(true);
     axios
-      .get(`${baseUrl}copy-trade/investors/6865641ea4ec5f2c5f0d7872`, {
+      .get(`${baseUrl}copy-trade/investors/6877d4706822e0a0e0a84476`, {
         headers: { token: adminToken },
       })
       .then((data) => {
+        console.log(data);
+
         if (data.status === 200) {
           setInvestors(data.data);
           setLoading(false);

@@ -49,3 +49,10 @@
   color: #ef4444;
   font-weight: bold;
 }
+
+@media (max-width: 600px) {
+  .investor-list li {
+    column-gap: 20px;
+    row-gap: 10px;
+  }
+}
