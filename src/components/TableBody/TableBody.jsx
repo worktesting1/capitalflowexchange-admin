@@ -53,14 +53,7 @@ const TableBody = ({
   };
 
   const [kycLoader, setKycLoader] = useState(false);
-  const {
-    baseUrl,
-    getUserKYC,
-    userKyc,
-    getUserPortfolio,
-    withdrawalFailed,
-    wLoading,
-  } = useGlobalContext();
+  const { baseUrl, getUserKYC, userKyc, getUserPortfolio } = useGlobalContext();
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
 
   const updateKYC = (id, userId, email) => {
@@ -87,7 +80,6 @@ const TableBody = ({
         });
     }
   };
-  const navigate = useNavigate();
 
   return (
     <>
