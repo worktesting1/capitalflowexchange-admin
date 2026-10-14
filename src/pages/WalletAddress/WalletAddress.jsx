@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./WalletAddress.css";
-import { Button, DashHead, TableBody } from "../../components";
+import { Button, DashHead } from "../../components";
 import { RxCaretLeft, RxCaretRight } from "react-icons/rx";
 import axios from "axios";
 import { useGlobalContext } from "../../context/context";
@@ -11,7 +11,7 @@ const WalletAddress = () => {
   const { baseUrl } = useGlobalContext();
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
 
-  const getAllWalletAddresses = () => {
+  const getAllWalletAddresses = useCallback(() => {
     setLoading(true);
     axios
       .get(`${baseUrl}copy-trade/investors/6877d4706822e0a0e0a84476`, {
@@ -28,11 +28,11 @@ const WalletAddress = () => {
       .catch((error) => {
         setLoading(false);
       });
-  };
+  }, [adminToken, baseUrl]);
 
   useEffect(() => {
     getAllWalletAddresses();
-  }, []);
+  }, [getAllWalletAddresses]);
 
   return (
     <section className="wallet_address">
@@ -67,7 +67,9 @@ const WalletAddress = () => {
         </div>
         <div className="investor-list">
           <h2>Investors Copying You</h2>
-          {investors.length === 0 ? (
+          {loading ? (
+            <p>Loading investors…</p>
+          ) : investors.length === 0 ? (
             <p>No investors are copying you yet.</p>
           ) : (
             <ul>

@@ -103,7 +103,17 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
     getAllAssetFundingRequest(adminToken);
     getUserKYC(adminToken, id);
     getUserPortfolio(id, adminToken);
-  }, []);
+  }, [
+    adminToken,
+    getAllAssetFundingRequest,
+    getAllDeposits,
+    getAllFundingRequest,
+    getAllWithdrawals,
+    getUserDetails,
+    getUserKYC,
+    getUserPortfolio,
+    id,
+  ]);
   console.log();
 
   return (

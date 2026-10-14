@@ -393,7 +393,7 @@ const CreateFoodItems = () => {
 
   useEffect(() => {
     getUserDetails(id);
-  }, []);
+  }, [getUserDetails, id]);
 
   return (
     <section className="add_food_item_container">

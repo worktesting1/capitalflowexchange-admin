@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./DashboardHeader.css";
 import LoginImageHero from "../../asset/profit.png";
 import { RiMenu3Line } from "react-icons/ri";

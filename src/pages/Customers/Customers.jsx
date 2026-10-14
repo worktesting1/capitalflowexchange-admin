@@ -11,7 +11,7 @@ const Customers = ({ toggleNotification }) => {
 
   useEffect(() => {
     getAllUsers(adminToken);
-  }, []);
+  }, [adminToken, getAllUsers]);
 
   return (
     <section className="customers">

@@ -1,8 +1,7 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const DashboardNav = ({ navItems, toggleVisibility, visibility }) => {
-  const navigate = useNavigate();
   return (
     <nav className={`dashboard_nav ${visibility ? "show_nav" : ""}`}>
       <>

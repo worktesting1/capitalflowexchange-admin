@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./Transaction.css";
 import moment from "moment";
 import { Button } from "../../components";
 import { useGlobalContext } from "../../context/context";
 import { ColorRing } from "react-loader-spinner";
-import Delete from "../../asset/delete.svg";
-import axios from "axios";
 
 const Deposits = () => {
-  const [loading, setLoading] = useState(false);
   const {
     allDeposits,
     getAllDeposits,
     dLoading,
     userDetails,
-    baseUrl,
     getAllAssetDeposits,
     allAssetDeposits,
   } = useGlobalContext();
@@ -23,27 +19,10 @@ const Deposits = () => {
 
   const symbol = country?.symbol;
 
-  // const deleteDeposit = (id, path) => {
-  //   setLoading(true);
-  //   axios
-  //     .post(
-  //       `${baseUrl}deposit/delete/${id}`,
-  //       {},
-  //       { headers: { token: adminToken } }
-  //     )
-  //     .then((response) => {
-  //       setLoading(false);
-  //       getAllDeposits(adminToken);
-  //     })
-  //     .catch((err) => {
-  //       setLoading(false);
-  //     });
-  // };
-
   useEffect(() => {
     getAllDeposits(adminToken);
     getAllAssetDeposits(adminToken);
-  }, []);
+  }, [adminToken, getAllAssetDeposits, getAllDeposits]);
   return (
     <section>
       <div className="transaction_sect">
@@ -69,7 +48,7 @@ const Deposits = () => {
               <h3>Delete Deposit</h3>
             </div> */}
           </div>
-          {dLoading || loading ? (
+          {dLoading ? (
             <div className="list_loader">
               <ColorRing
                 visible={true}
@@ -89,7 +68,6 @@ const Deposits = () => {
                 status,
                 amount,
                 updatedAt,
-                _id,
               } = item;
 
               let date = moment(createdAt).format("MMMM Do YYYY, h:mm:ss a");

@@ -18,7 +18,7 @@ const ActivateDeposit = ({
         <section className="notification_modal">
           <div style={{ width: 450 }} className="notification_container">
             <div className="add_food_item_header">
-              <h3 className="dashboard_header_text"></h3>
+              <h3 className="dashboard_header_text">Deposit status</h3>
               <div className="go_back">
                 <AiOutlineClose onClick={toggleActivateDeposit} size={20} />
               </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./TableBody.css";
 import Button from "../Button/Button";
 import Delete from "../../asset/delete.svg";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import moment from "moment/moment";
 import { ColorRing } from "react-loader-spinner";
 import { useGlobalContext } from "../../context/context";
@@ -20,7 +20,6 @@ const TableBody = ({
   symbol,
   toggleWithdrawalStatus,
 }) => {
-  const [status, setStatus] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [currentQuantity, setCurrentQuantity] = useState(null);
   const [assetId, setAssetId] = useState("");
@@ -132,11 +131,9 @@ const TableBody = ({
                   firstName,
                   lastName,
                   bonus,
-                  created_At,
                   gender,
                   deposits,
                   pendingDeposits,
-                  pendingWithdrawals,
                   _id,
                 } = item;
                 return (
@@ -288,7 +285,6 @@ const TableBody = ({
                 const {
                   firstName,
                   lastName,
-                  created_At,
                   phone,
                   _id,
                   email,

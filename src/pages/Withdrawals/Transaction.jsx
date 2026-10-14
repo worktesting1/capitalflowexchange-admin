@@ -15,7 +15,7 @@ const Deposits = () => {
 
   useEffect(() => {
     getAllWithdrawals(adminToken);
-  }, []);
+  }, [adminToken, getAllWithdrawals]);
   return (
     <section>
       <div className="transaction_sect">

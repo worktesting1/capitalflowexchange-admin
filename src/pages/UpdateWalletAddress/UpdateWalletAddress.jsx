@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./WalletAddress.css";
-import { Button, DashHead } from "../../components";
+import { DashHead } from "../../components";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useGlobalContext } from "../../context/context";

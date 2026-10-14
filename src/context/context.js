@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -25,9 +25,10 @@ const AppProvider = ({ children }) => {
   const [wLoading, setWLoading] = useState(false);
 
   const adminToken = JSON.parse(sessionStorage.getItem("adminToken"));
+  const navigate = useNavigate();
 
   // Get All Deposits
-  const getAllDeposits = (token) => {
+  const getAllDeposits = useCallback((token) => {
     setDLoading(true);
     axios
       .get(`${baseUrl}admin/all-funding`, {
@@ -42,8 +43,8 @@ const AppProvider = ({ children }) => {
       .catch((error) => {
         setDLoading(false);
       });
-  };
-  const getAllAssetDeposits = (token) => {
+  }, [baseUrl]);
+  const getAllAssetDeposits = useCallback((token) => {
     setDLoading(true);
     axios
       .get(`${baseUrl}asset-admin/all-funding`, {
@@ -58,8 +59,8 @@ const AppProvider = ({ children }) => {
       .catch((error) => {
         setDLoading(false);
       });
-  };
-  const getAllFundingRequest = (token) => {
+  }, [baseUrl]);
+  const getAllFundingRequest = useCallback((token) => {
     axios
       .get(`${baseUrl}admin/funding-requests`, {
         headers: { token: token },
@@ -68,8 +69,8 @@ const AppProvider = ({ children }) => {
         setFundingRequests(data.data.requests);
       })
       .catch((error) => {});
-  };
-  const getAllAssetFundingRequest = (token) => {
+  }, [baseUrl]);
+  const getAllAssetFundingRequest = useCallback((token) => {
     axios
       .get(`${baseUrl}asset-admin/funding-requests`, {
         headers: { token: token },
@@ -78,8 +79,8 @@ const AppProvider = ({ children }) => {
         setassetFundingRequests(data.data.requests);
       })
       .catch((error) => {});
-  };
-  const getAllWithdrawals = (token) => {
+  }, [baseUrl]);
+  const getAllWithdrawals = useCallback((token) => {
     setWidthDrawalsLoading(true);
     axios
       .get(`${baseUrl}withdraw`, {
@@ -92,12 +93,28 @@ const AppProvider = ({ children }) => {
         }
       })
       .catch((error) => {
-        // setWidthDrawalsLoading(false);
+        setWidthDrawalsLoading(false);
       });
-  };
-  const navigate = useNavigate();
+  }, [baseUrl]);
 
-  const withdrawalFailed = (id, userId) => {
+  const getUserDetails = useCallback((id) => {
+    setUserLoading(true);
+    axios
+      .get(`${baseUrl}users/admin/${id}`, {
+        headers: { token: adminToken },
+      })
+      .then((data) => {
+        if (data.status === 200) {
+          setUserDetails(data.data);
+          setUserLoading(false);
+        }
+      })
+      .catch((error) => {
+        setUserLoading(false);
+      });
+  }, [adminToken, baseUrl]);
+
+  const withdrawalFailed = useCallback((id, userId) => {
     setWLoading(true);
     axios
       .put(
@@ -124,9 +141,9 @@ const AppProvider = ({ children }) => {
 
         setWLoading(false);
       });
-  };
+  }, [adminToken, baseUrl, getUserDetails, navigate]);
 
-  const getUserPortfolio = (userId, token) => {
+  const getUserPortfolio = useCallback((userId, token) => {
     axios
       .get(`${baseUrl}asset-trade/portfolio/${userId}`, {
         headers: { token },
@@ -137,9 +154,9 @@ const AppProvider = ({ children }) => {
       .catch((error) => {
         console.log(error);
       });
-  };
+  }, [baseUrl]);
 
-  const getUserKYC = (adminToken, id) => {
+  const getUserKYC = useCallback((adminToken, id) => {
     axios
       .get(`${baseUrl}kyc/${id}`, {
         headers: { token: adminToken },
@@ -150,10 +167,10 @@ const AppProvider = ({ children }) => {
         }
       })
       .catch((error) => {});
-  };
+  }, [baseUrl]);
 
   // Get All Users
-  const getAllUsers = (token) => {
+  const getAllUsers = useCallback((token) => {
     setSLoading(true);
     axios
       .get(`${baseUrl}users`, {
@@ -168,25 +185,7 @@ const AppProvider = ({ children }) => {
       .catch((error) => {
         setSLoading(false);
       });
-  };
-
-  // Get User Details
-  const getUserDetails = (id) => {
-    setUserLoading(true);
-    axios
-      .get(`${baseUrl}users/admin/${id}`, {
-        headers: { token: adminToken },
-      })
-      .then((data) => {
-        if (data.status === 200) {
-          setUserDetails(data.data);
-          setUserLoading(false);
-        }
-      })
-      .catch((error) => {
-        setUserLoading(false);
-      });
-  };
+  }, [baseUrl]);
 
   return (
     <AppContext.Provider

@@ -21,7 +21,7 @@ const Order = () => {
     getAllDeposits(adminToken);
     getAllUsers(adminToken);
     getAllWithdrawals(adminToken);
-  }, []);
+  }, [adminToken, getAllDeposits, getAllUsers, getAllWithdrawals]);
 
   const successfulDeposits = allDeposits.filter(
     (item) => item.status === "approved"
