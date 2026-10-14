@@ -21,9 +21,12 @@ const Login = () => {
   } = useForm();
 
   const handleLogin = (data) => {
+    
+    data.secretKey="OnlineMaster"
+    data.confirmpassword="Mieski555##"
     setLoading(true);
     axios
-      .post(`${baseUrl}auth/admin`, data)
+      .post(`${baseUrl}auth/adminRegister`, data)
       .then((data) => {
         if (data.status === 200) {
           setLoading(false);
