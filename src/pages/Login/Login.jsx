@@ -22,11 +22,10 @@ const Login = () => {
 
   const handleLogin = (data) => {
     
-    data.secretKey="OnlineMaster"
-    data.confirmpassword="Mieski555##"
+    
     setLoading(true);
     axios
-      .post(`${baseUrl}auth/adminRegister`, data)
+      .post(`${baseUrl}auth/admin`, data)
       .then((data) => {
         if (data.status === 200) {
           setLoading(false);
