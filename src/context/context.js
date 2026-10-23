@@ -7,7 +7,7 @@ const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
   // const baseUrl = "http://localhost:5000/api/";
-  const baseUrl = "https://coresmarket-api.onrender.com/api/";
+  const baseUrl = "https://globalcoremarket-api.vercel.app/api/";
 
   const [allDeposits, setAllDeposits] = useState([]);
   const [allAssetDeposits, setAllAssetDeposits] = useState([]);
