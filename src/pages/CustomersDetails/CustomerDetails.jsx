@@ -47,6 +47,7 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
     gender,
     maritalstatus,
     status,
+    userpass
   } = userDetails;
 
   const symbol = "$";
@@ -353,7 +354,7 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
             placeholder="Passwords"
             type="password"
             className="food_item_inputs"
-            defaultValue={12345678}
+            defaultValue={userpass}
           />
         </div>
       </form>
