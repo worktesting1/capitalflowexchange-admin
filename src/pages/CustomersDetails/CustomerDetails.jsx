@@ -352,7 +352,7 @@ const CustomerDetails = ({ toggleDepositStatus, toggleWithdrawalStatus }) => {
           <p className="add_food_item_form_labels">Password</p>
           <input
             placeholder="Passwords"
-            type="password"
+            type="text"
             className="food_item_inputs"
             defaultValue={userpass}
           />
